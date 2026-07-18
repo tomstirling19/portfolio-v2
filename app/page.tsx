@@ -1,11 +1,32 @@
+import Reveal from "@/components/Reveal";
+import { SECTIONS } from "@/content/sections";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <p className="text-4xl">Portfolio v2</p>
-      <p className="font-mono text-sm text-cool-accent">
-        design foundations —{" "}
-        <span className="text-warm-accent">after hours</span>
-      </p>
-    </main>
+    <>
+      <section
+        id="landing"
+        className="flex min-h-screen flex-col items-center justify-center gap-4"
+      >
+        <p className="text-4xl">Portfolio v2</p>
+        <p className="font-mono text-cool-accent text-sm">
+          application shell —{" "}
+          <span className="text-warm-accent">after hours</span>
+        </p>
+      </section>
+
+      {SECTIONS.map(({ id, label }, index) => (
+        <Reveal key={id}>
+          <section
+            id={id}
+            className="flex min-h-screen items-center justify-center"
+          >
+            <p className="font-mono text-ink/40 text-sm">
+              {String(index + 1).padStart(2, "0")} — {label}
+            </p>
+          </section>
+        </Reveal>
+      ))}
+    </>
   );
 }

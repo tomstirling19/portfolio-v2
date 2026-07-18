@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+@theme {
   --color-ground: #0b0f17;
   --color-raised: #121826;
   --color-ink: #e7e9ee;
@@ -12,28 +12,12 @@
 }
 
 @theme inline {
-  --color-ground: var(--color-ground);
-  --color-raised: var(--color-raised);
-  --color-ink: var(--color-ink);
-  --color-cool-accent: var(--color-cool-accent);
-  --color-warm-accent: var(--color-warm-accent);
-
-  --radius-card: var(--radius-card);
-  --shadow-card: var(--shadow-card);
-
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
 }
 
-body {
-  font-family: var(--font-serif), serif;
-}
-
-.font-mono {
-  font-family: var(--font-mono), monospace;
-}
-
-p,
-.prose-measure {
-  max-width: 68ch;
+@layer base {
+  p {
+    max-width: 68ch;
+  }
 }
