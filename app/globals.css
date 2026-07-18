@@ -20,4 +20,69 @@
   p {
     max-width: 68ch;
   }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-mono), monospace;
+  }
+}
+
+@layer utilities {
+  .typewriter-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: var(--font-mono), monospace;
+  }
+
+  .typewriter-cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 0.9em;
+    margin-left: 0.15em;
+    background: var(--color-cool-accent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .typewriter-text {
+      width: 0;
+      animation: typewriter var(--typewriter-duration)
+        steps(var(--typewriter-steps), end) forwards;
+    }
+
+    .typewriter-cursor {
+      animation:
+        typewriter-cursor-blink var(--cursor-blink-period) step-end
+          var(--cursor-blink-iterations),
+        typewriter-cursor-collapse var(--cursor-collapse-duration) linear
+          var(--cursor-disappear-delay) forwards;
+    }
+  }
+}
+
+@keyframes typewriter {
+  to {
+    width: var(--typewriter-width);
+  }
+}
+
+@keyframes typewriter-cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes typewriter-cursor-collapse {
+  to {
+    width: 0;
+    margin-left: 0;
+  }
 }

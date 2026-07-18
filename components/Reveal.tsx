@@ -21,19 +21,14 @@ export default function Reveal({
   }
 
   return (
-    <>
-      <noscript>
-        <style>{".reveal{opacity:1!important;transform:none!important}"}</style>
-      </noscript>
-      <motion.div
-        className="reveal"
-        initial={{ opacity: 0, y: RISE_DISTANCE }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-10%" }}
-        transition={{ duration: DURATION_STANDARD, ease: EASE_REVEAL, delay }}
-      >
-        {children}
-      </motion.div>
-    </>
+    <motion.div
+      className="motion-fallback"
+      initial={{ opacity: 0, y: RISE_DISTANCE }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-10%" }}
+      transition={{ duration: DURATION_STANDARD, ease: EASE_REVEAL, delay }}
+    >
+      {children}
+    </motion.div>
   );
 }

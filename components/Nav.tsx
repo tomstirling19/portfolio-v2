@@ -30,6 +30,29 @@ function NavLink({
   );
 }
 
+function NavLinks({
+  activeId,
+  onNavigate,
+}: {
+  activeId: string | null;
+  onNavigate?: (event: MouseEvent<HTMLAnchorElement>) => void;
+}) {
+  return (
+    <>
+      {SECTIONS.map((section, index) => (
+        <NavLink
+          key={section.id}
+          id={section.id}
+          index={index}
+          label={section.label}
+          active={activeId === section.id}
+          onNavigate={onNavigate}
+        />
+      ))}
+    </>
+  );
+}
+
 export default function Nav() {
   const [activeId, setActiveId] = useState<string | null>(null);
 
@@ -63,15 +86,7 @@ export default function Nav() {
         aria-label="Section navigation"
         className="fixed top-1/2 right-8 hidden -translate-y-1/2 flex-col gap-3 md:flex"
       >
-        {SECTIONS.map((section, index) => (
-          <NavLink
-            key={section.id}
-            id={section.id}
-            index={index}
-            label={section.label}
-            active={activeId === section.id}
-          />
-        ))}
+        <NavLinks activeId={activeId} />
       </nav>
 
       <details className="bg-ground/90 sticky top-0 z-10 backdrop-blur md:hidden">
@@ -82,16 +97,7 @@ export default function Nav() {
           aria-label="Section navigation"
           className="flex flex-col gap-4 px-4 pb-4"
         >
-          {SECTIONS.map((section, index) => (
-            <NavLink
-              key={section.id}
-              id={section.id}
-              index={index}
-              label={section.label}
-              active={activeId === section.id}
-              onNavigate={closeMobileMenu}
-            />
-          ))}
+          <NavLinks activeId={activeId} onNavigate={closeMobileMenu} />
         </nav>
       </details>
     </>

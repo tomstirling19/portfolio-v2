@@ -1,19 +1,11 @@
+import Landing from "@/components/Landing";
 import Reveal from "@/components/Reveal";
 import { SECTIONS } from "@/content/sections";
 
 export default function Home() {
   return (
     <>
-      <section
-        id="landing"
-        className="flex min-h-screen scroll-mt-14 flex-col items-center justify-center gap-4 snap-start md:scroll-mt-0"
-      >
-        <p className="text-4xl">Portfolio v2</p>
-        <p className="font-mono text-cool-accent text-sm">
-          application shell —{" "}
-          <span className="text-warm-accent">after hours</span>
-        </p>
-      </section>
+      <Landing />
 
       {SECTIONS.map(({ id, label }, index) => (
         <Reveal key={id}>

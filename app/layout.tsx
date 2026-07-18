@@ -31,6 +31,11 @@ export default function RootLayout({
       className={`${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased motion-safe:snap-y motion-safe:snap-mandatory`}
     >
       <body className="min-h-full flex flex-col bg-ground text-ink font-serif">
+        <noscript>
+          <style>
+            {".motion-fallback{opacity:1!important;transform:none!important}"}
+          </style>
+        </noscript>
         <a
           href="#main-content"
           className="bg-raised text-ink sr-only rounded-sm px-4 py-2 font-mono text-sm focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50"
