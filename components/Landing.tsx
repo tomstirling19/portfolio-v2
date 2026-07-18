@@ -51,12 +51,12 @@ export default function Landing() {
         } as CSSProperties
       }
     >
-      <h1 className="flex items-baseline text-5xl">
+      <h1 className="text-warm-accent flex items-baseline text-5xl">
         <span className="typewriter-text">{NAME}</span>
         <span className="typewriter-cursor" aria-hidden="true" />
       </h1>
       <motion.p
-        className="motion-fallback font-mono text-3xl"
+        className="motion-fallback text-cool-accent font-mono text-3xl"
         {...lineMotion(SW_ENG_START, { x: SLIDE_DISTANCE })}
       >
         Software Engineer
