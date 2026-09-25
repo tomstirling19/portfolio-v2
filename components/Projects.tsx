@@ -3,7 +3,59 @@
 import { CarouselNav } from "@/components/CarouselControls";
 import { PROJECTS } from "@/content/data";
 import { useCarouselIndex } from "@/hooks/useCarouselIndex";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import Image from "next/image";
+import type { MouseEvent } from "react";
+import { useRef } from "react";
+
+const TILT_DEGREES = 6;
+const SPRING_STIFFNESS = 300;
+const SPRING_DAMPING = 30;
+
+function ProjectImage({ src, alt }: { src: string; alt: string }) {
+  const reducedMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+  const springRotateX = useSpring(rotateX, {
+    stiffness: SPRING_STIFFNESS,
+    damping: SPRING_DAMPING,
+  });
+  const springRotateY = useSpring(rotateY, {
+    stiffness: SPRING_STIFFNESS,
+    damping: SPRING_DAMPING,
+  });
+
+  const handleMouseMove = (event: MouseEvent<HTMLDivElement>) => {
+    if (reducedMotion || !ref.current) return;
+    const bounds = ref.current.getBoundingClientRect();
+    const px = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const py = (event.clientY - bounds.top) / bounds.height - 0.5;
+    rotateY.set(px * TILT_DEGREES);
+    rotateX.set(py * -TILT_DEGREES);
+  };
+
+  const handleMouseLeave = () => {
+    rotateX.set(0);
+    rotateY.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX: springRotateX,
+        rotateY: springRotateY,
+        transformPerspective: 800,
+      }}
+      className="bg-raised relative aspect-[16/10] overflow-hidden rounded-md"
+    >
+      <Image src={src} alt={alt} fill unoptimized className="object-cover" />
+    </motion.div>
+  );
+}
 
 export default function Projects() {
   const { trackRef, activeIndex, scrollToIndex } = useCarouselIndex(PROJECTS.length);
@@ -20,15 +72,7 @@ export default function Projects() {
             data-index={index}
             className="w-full shrink-0 snap-start px-1 [scroll-snap-stop:always]"
           >
-            <div className="bg-raised relative aspect-[16/10] overflow-hidden rounded-md">
-              <Image
-                src={image}
-                alt={name}
-                fill
-                unoptimized
-                className="object-cover"
-              />
-            </div>
+            <ProjectImage src={image} alt={name} />
             <div className="mt-4">
               <a
                 href={href}

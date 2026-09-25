@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, JetBrains_Mono } from "next/font/google";
 import CursorGlow from "@/components/CursorGlow";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
+import ScrollProgress from "@/components/ScrollProgress";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -17,8 +18,20 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio v2",
-  description: "Thomas Stirling — portfolio v2",
+  title: "Thomas Stirling — Software Engineer",
+  description:
+    "Portfolio of Thomas Stirling, a software engineer working on backend systems, ML tooling, and full-stack applications.",
+  openGraph: {
+    title: "Thomas Stirling — Software Engineer",
+    description:
+      "Portfolio of Thomas Stirling, a software engineer working on backend systems, ML tooling, and full-stack applications.",
+    type: "website",
+    images: ["/images/thomas.jpg"],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0b0f17",
 };
 
 export default function RootLayout({
@@ -43,6 +56,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <ScrollProgress />
         <Nav />
         <main id="main-content" className="flex flex-1 flex-col">
           <CursorGlow>{children}</CursorGlow>

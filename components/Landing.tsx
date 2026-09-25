@@ -1,20 +1,9 @@
 "use client";
 
-import { GithubIcon, GitlabIcon, LinkedinIcon, MailIcon } from "@/components/icons/BrandIcons";
-import { LINKS } from "@/content/data";
+import { ICON_LINKS, LINK_ICONS } from "@/components/icons/linkIcons";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import type { CSSProperties } from "react";
 import { useRef } from "react";
-
-const ICONS = {
-  LinkedIn: LinkedinIcon,
-  GitHub: GithubIcon,
-  GitLab: GitlabIcon,
-  Email: MailIcon,
-};
-const ICON_LINKS = LINKS.filter(
-  (link): link is (typeof LINKS)[number] & { label: keyof typeof ICONS } => link.label in ICONS,
-);
 
 const NAME = "Thomas Stirling";
 const TYPEWRITER_CHAR_DURATION = 0.08;
@@ -92,7 +81,7 @@ export default function Landing() {
           {...lineMotion(ICONS_START, { y: SLIDE_DISTANCE })}
         >
           {ICON_LINKS.map(({ label, href }) => {
-            const Icon = ICONS[label];
+            const Icon = LINK_ICONS[label];
             return (
               <li key={label}>
                 <a

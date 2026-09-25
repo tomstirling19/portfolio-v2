@@ -17,7 +17,26 @@
   --font-mono: var(--font-mono);
 }
 
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.25s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 @layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-warm-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
   p {
     max-width: 68ch;
   }

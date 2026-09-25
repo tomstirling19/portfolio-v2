@@ -1,6 +1,7 @@
 "use client";
 
 import { SECTIONS } from "@/content/sections";
+import { jumpToSection } from "@/lib/jumpToSection";
 import { useEffect, useState, type MouseEvent } from "react";
 
 function NavLink({
@@ -18,10 +19,7 @@ function NavLink({
 }) {
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    // scroll-behavior:smooth + scroll-snap-type can cancel the native anchor
-    // jump outright (net 0px movement); an instant jump is reliable.
-    document.getElementById(id)?.scrollIntoView({ behavior: "instant" as ScrollBehavior });
-    history.replaceState(null, "", `#${id}`);
+    jumpToSection(id);
     onNavigate?.(event);
   };
 
@@ -30,7 +28,7 @@ function NavLink({
       href={`#${id}`}
       aria-current={active ? "location" : undefined}
       onClick={handleClick}
-      className={`font-mono text-sm transition-colors ${
+      className={`block py-1.5 font-mono text-sm transition-colors md:py-0 ${
         active ? "text-cool-accent" : "text-ink/60 hover:text-ink"
       }`}
     >
@@ -62,6 +60,8 @@ function NavLinks({
   );
 }
 
+const ALL_IDS = ["landing", ...SECTIONS.map((section) => section.id)];
+
 export default function Nav() {
   const [activeId, setActiveId] = useState<string | null>(null);
 
@@ -77,12 +77,50 @@ export default function Nav() {
       { rootMargin: "-40% 0px -40% 0px" },
     );
 
-    for (const id of ["landing", ...SECTIONS.map((section) => section.id)]) {
+    for (const id of ALL_IDS) {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     }
 
     return () => observer.disconnect();
+  }, []);
+
+  // Up/Down jump a full section, matching the nav's own controlled-scroll feel.
+  // Reads position straight from the DOM rather than React state, so rapid
+  // keypresses in a row each see where the page actually is right now.
+  useEffect(() => {
+    const getCurrentIndex = () => {
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+      ALL_IDS.forEach((id, index) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const distance = Math.abs(el.getBoundingClientRect().top);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+      return closestIndex;
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+      if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target && /^(input|textarea|select)$/i.test(target.tagName)) return;
+
+      const currentIndex = getCurrentIndex();
+      const nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+      const nextId = ALL_IDS[nextIndex];
+      if (!nextId) return;
+
+      event.preventDefault();
+      jumpToSection(nextId);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const closeMobileMenu = (event: MouseEvent<HTMLAnchorElement>) => {

@@ -11,6 +11,7 @@ import { useState } from "react";
 
 const GLOW_SIZE = 90;
 const GLOW_MAX_OPACITY = 0.35;
+const HOVER_SCALE = 2.2;
 const SPRING_STIFFNESS = 300;
 const SPRING_DAMPING = 30;
 const OPACITY_DURATION = 0.15;
@@ -18,6 +19,7 @@ const OPACITY_DURATION = 0.15;
 export default function CursorGlow({ children }: { children: ReactNode }) {
   const reducedMotion = useReducedMotion();
   const [visible, setVisible] = useState(false);
+  const [hoveringLink, setHoveringLink] = useState(false);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -39,6 +41,7 @@ export default function CursorGlow({ children }: { children: ReactNode }) {
     const bounds = event.currentTarget.getBoundingClientRect();
     x.set(event.clientX - bounds.left);
     y.set(event.clientY - bounds.top);
+    setHoveringLink(Boolean((event.target as HTMLElement).closest("a, button")));
   };
 
   const handlePointerEnter = (event: PointerEvent<HTMLDivElement>) => {
@@ -65,7 +68,10 @@ export default function CursorGlow({ children }: { children: ReactNode }) {
           background:
             "radial-gradient(circle, var(--color-warm-accent) 0%, transparent 60%)",
         }}
-        animate={{ opacity: visible ? GLOW_MAX_OPACITY : 0 }}
+        animate={{
+          opacity: visible ? GLOW_MAX_OPACITY : 0,
+          scale: hoveringLink ? HOVER_SCALE : 1,
+        }}
         transition={{ duration: OPACITY_DURATION }}
       />
       {children}
