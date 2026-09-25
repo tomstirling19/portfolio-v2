@@ -1,6 +1,6 @@
 "use client";
 
-import { CarouselNav } from "@/components/CarouselControls";
+import { CarouselNav } from "@/components/ui/CarouselControls";
 import { ExternalLinkIcon } from "@/components/icons/BrandIcons";
 import { PROJECTS } from "@/content/data";
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
@@ -11,15 +11,15 @@ import { useRef, type PointerEvent } from "react";
 const OFFSET_X = 170;
 const SWIPE_THRESHOLD = 60;
 
-function cardStyle(diff: number) {
-  const abs = Math.abs(diff);
-  if (abs === 0) {
+function cardStyle(offsetFromActive: number) {
+  const distanceFromActive = Math.abs(offsetFromActive);
+  if (distanceFromActive === 0) {
     return { x: 0, scale: 1, opacity: 1, blur: 0, zIndex: 30 };
   }
-  if (abs === 1) {
-    return { x: diff * OFFSET_X, scale: 0.82, opacity: 0.5, blur: 1.5, zIndex: 20 };
+  if (distanceFromActive === 1) {
+    return { x: offsetFromActive * OFFSET_X, scale: 0.82, opacity: 0.5, blur: 1.5, zIndex: 20 };
   }
-  return { x: diff * OFFSET_X * 1.6, scale: 0.65, opacity: 0, blur: 3, zIndex: 10 };
+  return { x: offsetFromActive * OFFSET_X * 1.6, scale: 0.65, opacity: 0, blur: 3, zIndex: 10 };
 }
 
 export default function Projects() {
@@ -51,8 +51,8 @@ export default function Projects() {
         }}
       >
         {PROJECTS.map(({ name, image }, index) => {
-          const diff = reducedMotion ? (index === activeIndex ? 0 : 2) : index - activeIndex;
-          const style = cardStyle(diff);
+          const offsetFromActive = reducedMotion ? (index === activeIndex ? 0 : 2) : index - activeIndex;
+          const style = cardStyle(offsetFromActive);
           return (
             <div
               key={name}

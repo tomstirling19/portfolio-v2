@@ -1,7 +1,7 @@
 "use client";
 
-import MarginNote from "@/components/MarginNote";
-import PhotoCarousel from "@/components/PhotoCarousel";
+import MarginNote from "@/components/ui/MarginNote";
+import PhotoCarousel from "@/components/ui/PhotoCarousel";
 import { ABOUT_PHOTOS } from "@/content/data";
 import { DURATION_HOLD, EASE_SETTLE_CSS, SLIDE_DISTANCE } from "@/lib/revealMotion";
 import { useReducedMotion } from "motion/react";

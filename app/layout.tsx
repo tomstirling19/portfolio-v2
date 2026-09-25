@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, JetBrains_Mono } from "next/font/google";
-import CursorGlow from "@/components/CursorGlow";
-import Footer from "@/components/Footer";
-import Nav from "@/components/Nav";
-import ScrollController from "@/components/ScrollController";
-import ScrollProgress from "@/components/ScrollProgress";
+import CursorGlow from "@/components/layout/CursorGlow";
+import Footer from "@/components/layout/Footer";
+import Nav from "@/components/layout/Nav";
+import ScrollController from "@/components/layout/ScrollController";
+import ScrollProgress from "@/components/layout/ScrollProgress";
+import ThemeToggle from "@/components/layout/ThemeToggle";
 import { ProjectsCarouselProvider } from "@/context/ProjectsCarouselContext";
+import { THEME_COLOR_DARK, THEME_COLOR_LIGHT } from "@/lib/theme";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -35,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0f17",
+  themeColor: THEME_COLOR_DARK,
 };
 
 export default function RootLayout({
@@ -46,8 +48,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased motion-safe:snap-y motion-safe:snap-mandatory motion-safe:scroll-smooth`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('theme')==='light'){document.documentElement.dataset.theme='light';document.querySelector('meta[name="theme-color"]').setAttribute('content','${THEME_COLOR_LIGHT}')}}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-ground text-ink font-serif">
         <noscript>
           <style>
@@ -63,6 +73,7 @@ export default function RootLayout({
         <ProjectsCarouselProvider>
           <ScrollController />
           <ScrollProgress />
+          <ThemeToggle />
           <Nav />
           <main id="main-content" className="flex flex-1 flex-col">
             <CursorGlow>{children}</CursorGlow>

@@ -2,8 +2,9 @@
 
 import { SECTIONS } from "@/content/sections";
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
-import { ALL_SECTION_IDS as ALL_IDS, getCurrentSectionIndex as getCurrentIndex } from "@/lib/getCurrentSectionIndex";
+import { ALL_SECTION_IDS } from "@/lib/getCurrentSectionIndex";
 import { jumpToSection } from "@/lib/jumpToSection";
+import { navigateOneStep } from "@/lib/navigateSection";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 
 function NavLink({
@@ -84,7 +85,7 @@ export default function Nav() {
       { rootMargin: "-40% 0px -40% 0px" },
     );
 
-    for (const id of ALL_IDS) {
+    for (const id of ALL_SECTION_IDS) {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     }
@@ -99,30 +100,12 @@ export default function Nav() {
       const target = event.target as HTMLElement | null;
       if (target && /^(input|textarea|select)$/i.test(target.tagName)) return;
 
-      const currentIndex = getCurrentIndex();
-      const currentId = ALL_IDS[currentIndex];
-      const goingDown = event.key === "ArrowDown";
-
-      if (currentId === "projects") {
-        const atEnd = activeIndexRef.current >= count - 1;
-        const atStart = activeIndexRef.current <= 0;
-        if (goingDown && !atEnd) {
-          event.preventDefault();
-          goTo(activeIndexRef.current + 1);
-          return;
-        }
-        if (!goingDown && !atStart) {
-          event.preventDefault();
-          goTo(activeIndexRef.current - 1);
-          return;
-        }
-      }
-
-      const nextId = ALL_IDS[goingDown ? currentIndex + 1 : currentIndex - 1];
-      if (!nextId) return;
-
-      event.preventDefault();
-      jumpToSection(nextId);
+      const navigated = navigateOneStep(event.key === "ArrowDown", {
+        activeIndex: activeIndexRef.current,
+        count,
+        goTo,
+      });
+      if (navigated) event.preventDefault();
     };
 
     window.addEventListener("keydown", handleKeyDown);

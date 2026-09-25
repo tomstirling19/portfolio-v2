@@ -1,6 +1,6 @@
 "use client";
 
-import { CarouselNav } from "@/components/CarouselControls";
+import { CarouselNav } from "@/components/ui/CarouselControls";
 import { useCarouselIndex } from "@/hooks/useCarouselIndex";
 import Image from "next/image";
 

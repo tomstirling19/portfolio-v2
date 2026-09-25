@@ -1,10 +1,10 @@
-import About from "@/components/About";
-import Contact from "@/components/Contact";
-import Experience from "@/components/Experience";
-import Interests from "@/components/Interests";
-import Landing from "@/components/Landing";
-import Projects from "@/components/Projects";
-import Reveal from "@/components/Reveal";
+import About from "@/components/sections/About";
+import Contact from "@/components/sections/Contact";
+import Experience from "@/components/sections/Experience";
+import Interests from "@/components/sections/Interests";
+import Landing from "@/components/sections/Landing";
+import Projects from "@/components/sections/Projects";
+import Reveal from "@/components/layout/Reveal";
 import { SECTIONS } from "@/content/sections";
 
 const CONTENT: Record<string, React.ComponentType> = {

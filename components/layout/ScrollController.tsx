@@ -1,8 +1,8 @@
 "use client";
 
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
-import { ALL_SECTION_IDS as ALL_IDS, getCurrentSectionIndex as getCurrentIndex } from "@/lib/getCurrentSectionIndex";
-import { jumpToSection } from "@/lib/jumpToSection";
+import { ALL_SECTION_IDS, getCurrentSectionIndex } from "@/lib/getCurrentSectionIndex";
+import { navigateOneStep } from "@/lib/navigateSection";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 
@@ -33,8 +33,7 @@ export default function ScrollController() {
     };
 
     const handleWheel = (event: WheelEvent) => {
-      const currentIndex = getCurrentIndex();
-      const currentId = ALL_IDS[currentIndex];
+      const currentId = ALL_SECTION_IDS[getCurrentSectionIndex()];
 
       if (currentId === "experience") return;
 
@@ -48,31 +47,15 @@ export default function ScrollController() {
         return;
       }
 
-      const goingDown = event.deltaY > 0;
-
-      if (currentId === "projects") {
-        const atEnd = activeIndexRef.current >= count - 1;
-        const atStart = activeIndexRef.current <= 0;
-        if (goingDown && !atEnd) {
-          event.preventDefault();
-          goTo(activeIndexRef.current + 1);
-          lock();
-          return;
-        }
-        if (!goingDown && !atStart) {
-          event.preventDefault();
-          goTo(activeIndexRef.current - 1);
-          lock();
-          return;
-        }
+      const navigated = navigateOneStep(event.deltaY > 0, {
+        activeIndex: activeIndexRef.current,
+        count,
+        goTo,
+      });
+      if (navigated) {
+        event.preventDefault();
+        lock();
       }
-
-      const nextId = ALL_IDS[goingDown ? currentIndex + 1 : currentIndex - 1];
-      if (!nextId) return;
-
-      event.preventDefault();
-      jumpToSection(nextId);
-      lock();
     };
 
     window.addEventListener("wheel", handleWheel, { passive: false });
