@@ -16,11 +16,33 @@ function NavLink({
   active: boolean;
   onNavigate?: (event: MouseEvent<HTMLAnchorElement>) => void;
 }) {
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    // scroll-behavior:smooth + scroll-snap-type can cancel the native anchor
+    // jump outright (net 0px movement); an instant jump is reliable.
+    const el = document.getElementById(id);
+    if (el) {
+      // Tall scroll-linked reveal sections (e.g. the diagonal about hero) land
+      // past the reveal threshold instead of at the top, so content is visible.
+      const isTallReveal = el.offsetHeight > window.innerHeight * 1.5;
+      if (isTallReveal) {
+        window.scrollTo({
+          top: el.offsetTop + el.offsetHeight * 0.75,
+          behavior: "instant" as ScrollBehavior,
+        });
+      } else {
+        el.scrollIntoView({ behavior: "instant" as ScrollBehavior });
+      }
+    }
+    history.replaceState(null, "", `#${id}`);
+    onNavigate?.(event);
+  };
+
   return (
     <a
       href={`#${id}`}
       aria-current={active ? "location" : undefined}
-      onClick={onNavigate}
+      onClick={handleClick}
       className={`font-mono text-sm transition-colors ${
         active ? "text-cool-accent" : "text-ink/60 hover:text-ink"
       }`}

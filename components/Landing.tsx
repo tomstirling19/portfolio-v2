@@ -20,10 +20,10 @@ const NAME = "Thomas Stirling";
 const TYPEWRITER_CHAR_DURATION = 0.08;
 const TYPEWRITER_DURATION = NAME.length * TYPEWRITER_CHAR_DURATION;
 
-const DURATION_HOLD = 1;
+const DURATION_HOLD = 0.7;
 const EASE_SETTLE: [number, number, number, number] = [0.16, 0.9, 0.2, 1];
 const SLIDE_DISTANCE = 150;
-const GAP = 0.2;
+const GAP = 0.15;
 const CURSOR_COLLAPSE_DURATION = 0.2;
 const MIN_CURSOR_BLINKS = 3;
 
@@ -100,7 +100,7 @@ export default function Landing() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="text-ink/60 hover:text-warm-accent block transition-colors"
+                  className="text-icon-orange/80 hover:text-icon-orange block transition-colors"
                 >
                   <Icon className="h-7 w-7" />
                 </a>

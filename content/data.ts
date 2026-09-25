@@ -5,26 +5,31 @@ export const EXPERIENCE = [
     role: "Backend Engineer",
     org: "Zopa Bank",
     period: "Oct 2025 — Present",
+    logo: "/images/logos/zopa-bank.png",
   },
   {
     role: "Backend Engineer",
     org: "Sky Betting and Gaming",
     period: "Aug 2023 — Sept 2025",
+    logo: "/images/logos/sky-betting-and-gaming.jpg",
   },
   {
     role: "Software Engineer (Full-Stack)",
     org: "Ascent",
     period: "Aug 2022 — Jul 2023",
+    logo: "/images/logos/ascent.png",
   },
   {
     role: "Software & Data Engineer (Full-Stack)",
     org: "Airbus Defence and Space",
     period: "Sept 2021 — Aug 2022",
+    logo: "/images/logos/airbus-defence-and-space.png",
   },
   {
     role: "Junior Software Developer (Full-Stack)",
     org: "Bytemark",
     period: "Jul 2018 — Jul 2019",
+    logo: "/images/logos/bytemark.png",
   },
 ] as const;
 
@@ -35,6 +40,7 @@ export const PROJECTS = [
       "Language-learning app for custom lessons, built with Go and React Native with optional OpenAI-generated content, personalised tracking, and lesson creation across languages.",
     year: "2024",
     href: "https://github.com/tomstirling19/bamboo",
+    image: "/images/projects/bamboo.jpg",
   },
   {
     name: "Fracture Detection XAI",
@@ -42,6 +48,7 @@ export const PROJECTS = [
       "Master's dissertation: a multi-model neural network that detects and localises fractures in X-rays, segmenting the image to output a user-friendly report and heatmap.",
     year: "2021",
     href: "https://drive.google.com/file/d/17w6rHj-23qgu-jjlhJ78HoOb2I73XJ5i/view?usp=sharing",
+    image: "/images/projects/fracture-detection.png",
   },
   {
     name: "Autonomous Robot Assistant",
@@ -49,6 +56,7 @@ export const PROJECTS = [
       "Bachelor's dissertation: an autonomous robot combining face authentication, safe navigation, and destination object detection into an end-to-end assistant.",
     year: "2020",
     href: "https://gitlab.com/tomstirling/project",
+    image: "/images/projects/robot-assistant.jpg",
   },
 ] as const;
 

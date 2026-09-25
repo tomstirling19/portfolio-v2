@@ -3,6 +3,7 @@
 import { CarouselNav } from "@/components/CarouselControls";
 import { PROJECTS } from "@/content/data";
 import { useCarouselIndex } from "@/hooks/useCarouselIndex";
+import Image from "next/image";
 
 export default function Projects() {
   const { trackRef, activeIndex, scrollToIndex } = useCarouselIndex(PROJECTS.length);
@@ -13,10 +14,16 @@ export default function Projects() {
         ref={trackRef}
         className="scrollbar-none flex snap-x snap-mandatory overflow-x-auto rounded-md"
       >
-        {PROJECTS.map(({ name, description, year, href }, index) => (
+        {PROJECTS.map(({ name, description, year, href, image }, index) => (
           <div key={name} data-index={index} className="w-full shrink-0 snap-start px-1">
-            <div className="bg-raised text-ink/30 flex aspect-[16/10] items-center justify-center rounded-md font-mono text-xs">
-              photo pending
+            <div className="bg-raised relative aspect-[16/10] overflow-hidden rounded-md">
+              <Image
+                src={image}
+                alt={name}
+                fill
+                unoptimized
+                className="object-cover"
+              />
             </div>
             <div className="mt-4">
               <a
