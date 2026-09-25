@@ -38,7 +38,7 @@ export default function Landing() {
   return (
     <section
       id="landing"
-      className="flex min-h-screen scroll-mt-14 flex-col items-center justify-center gap-4 snap-start md:scroll-mt-0"
+      className="flex min-h-screen scroll-mt-14 flex-col items-center justify-center gap-4 px-6 snap-start md:scroll-mt-0"
       style={
         {
           "--typewriter-width": `${NAME.length}ch`,
@@ -51,12 +51,12 @@ export default function Landing() {
         } as CSSProperties
       }
     >
-      <h1 className="text-warm-accent flex items-baseline text-5xl">
+      <h1 className="text-warm-accent flex items-baseline text-4xl sm:text-5xl md:text-6xl">
         <span className="typewriter-text">{NAME}</span>
         <span className="typewriter-cursor" aria-hidden="true" />
       </h1>
       <motion.p
-        className="motion-fallback text-cool-accent font-mono text-3xl"
+        className="motion-fallback text-cool-accent font-mono text-xl sm:text-2xl md:text-3xl"
         {...lineMotion(SW_ENG_START, { x: SLIDE_DISTANCE })}
       >
         Software Engineer

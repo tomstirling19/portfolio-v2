@@ -1,3 +1,5 @@
+export const ABOUT_PHOTOS = [{ src: "/images/thomas.jpg", alt: "Thomas Stirling" }] as const;
+
 export const EXPERIENCE = [
   {
     role: "Backend Engineer",

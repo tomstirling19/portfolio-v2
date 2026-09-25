@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, JetBrains_Mono } from "next/font/google";
+import CursorGlow from "@/components/CursorGlow";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import "./globals.css";
@@ -28,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased motion-safe:snap-y motion-safe:snap-mandatory`}
+      className={`${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased motion-safe:snap-y motion-safe:snap-proximity motion-safe:scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-ground text-ink font-serif">
         <noscript>
@@ -44,7 +45,7 @@ export default function RootLayout({
         </a>
         <Nav />
         <main id="main-content" className="flex flex-1 flex-col">
-          {children}
+          <CursorGlow>{children}</CursorGlow>
         </main>
         <Footer />
       </body>

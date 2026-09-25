@@ -1,56 +1,79 @@
 "use client";
 
 import MarginNote from "@/components/MarginNote";
-import Photo from "@/components/Photo";
-import { motion, useReducedMotion } from "motion/react";
+import PhotoCarousel from "@/components/PhotoCarousel";
+import { ABOUT_PHOTOS } from "@/content/data";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { useRef } from "react";
 
-const DURATION_STANDARD = 0.35;
-const EASE_REVEAL: [number, number, number, number] = [0.22, 0.8, 0.32, 1];
-const RISE_DISTANCE = 10;
-const STAGGER = 0.08;
+const TEXT_REVEAL_START = 0.45;
+const TEXT_REVEAL_END = 0.72;
+const TEXT_RISE_DISTANCE = 24;
 
 export default function About() {
+  const sectionRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
 
-  const itemMotion = (index: number) =>
-    reducedMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: RISE_DISTANCE },
-          whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true, margin: "-10%" },
-          transition: {
-            duration: DURATION_STANDARD,
-            ease: EASE_REVEAL,
-            delay: index * STAGGER,
-          },
-        };
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+  const textOpacity = useTransform(scrollYProgress, [TEXT_REVEAL_START, TEXT_REVEAL_END], [0, 1]);
+  const textY = useTransform(
+    scrollYProgress,
+    [TEXT_REVEAL_START, TEXT_REVEAL_END],
+    [TEXT_RISE_DISTANCE, 0],
+  );
+
+  const text = (
+    <>
+      <p>
+        My name is Thomas Stirling. I hold a Master&rsquo;s degree in Computer
+        Science from the University of Leeds (MEng &amp; BSc, First-Class
+        Honours).
+      </p>
+      <MarginNote>
+        When not shipping code, you&rsquo;ll find me on a tennis court or
+        sketching something badly.
+      </MarginNote>
+      <p>
+        My greatest interests lie in AI, ML, data, and application
+        development. I&rsquo;m enthusiastic about all things tech and try to
+        stay updated with the latest industry developments.
+      </p>
+    </>
+  );
+
+  if (reducedMotion) {
+    return (
+      <section
+        id="about"
+        className="scroll-mt-14 snap-start px-6 py-24 md:scroll-mt-0"
+      >
+        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-[1.1fr_1fr] md:items-center">
+          <PhotoCarousel photos={ABOUT_PHOTOS} />
+          <div className="flex flex-col gap-4">{text}</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
       id="about"
-      className="scroll-mt-14 snap-start py-24 md:scroll-mt-0"
+      ref={sectionRef}
+      className="scroll-mt-14 relative h-[200vh] snap-start md:scroll-mt-0"
     >
-      <div className="mx-auto grid max-w-3xl gap-8 px-6 md:grid-cols-[1fr_180px] md:gap-x-10 md:gap-y-4">
-        <motion.div className="motion-fallback md:col-span-2" {...itemMotion(0)}>
-          <Photo src="/images/thomas.jpg" alt="Thomas Stirling" />
-        </motion.div>
-        <motion.p className="motion-fallback" {...itemMotion(1)}>
-          My name is Thomas Stirling. I hold a Master&rsquo;s degree in
-          Computer Science from the University of Leeds (MEng &amp; BSc,
-          First-Class Honours).
-        </motion.p>
-        <motion.div className="motion-fallback" {...itemMotion(2)}>
-          <MarginNote>
-            When not shipping code, you&rsquo;ll find me on a tennis court or
-            sketching something badly.
-          </MarginNote>
-        </motion.div>
-        <motion.p className="motion-fallback" {...itemMotion(3)}>
-          My greatest interests lie in AI, ML, data, and application
-          development. I&rsquo;m enthusiastic about all things tech and try
-          to stay updated with the latest industry developments.
-        </motion.p>
+      <div className="sticky top-0 flex h-screen items-center px-6">
+        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-[1.1fr_1fr] md:items-center">
+          <PhotoCarousel photos={ABOUT_PHOTOS} />
+          <motion.div
+            style={{ opacity: textOpacity, y: textY }}
+            className="flex flex-col gap-4"
+          >
+            {text}
+          </motion.div>
+        </div>
       </div>
     </section>
   );
