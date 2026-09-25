@@ -1,4 +1,8 @@
-import { ALL_SECTION_IDS, getCurrentSectionIndex } from "@/lib/getCurrentSectionIndex";
+import {
+  ALL_SECTION_IDS,
+  getCurrentSectionIndex,
+  isFreeScrollSection,
+} from "@/lib/getCurrentSectionIndex";
 import { jumpToSection } from "@/lib/jumpToSection";
 
 type CarouselState = {
@@ -11,7 +15,7 @@ export function navigateOneStep(goingDown: boolean, carousel: CarouselState): bo
   const currentIndex = getCurrentSectionIndex();
   const currentId = ALL_SECTION_IDS[currentIndex];
 
-  if (currentId === "experience") return false;
+  if (isFreeScrollSection(currentId)) return false;
 
   if (currentId === "projects") {
     const atEnd = carousel.activeIndex >= carousel.count - 1;

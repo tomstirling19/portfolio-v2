@@ -83,3 +83,5 @@ export const LINKS = [
   { label: "GitLab", href: "https://gitlab.com/tomstirling" },
   { label: "Email", href: "mailto:tomstirling19@gmail.com" },
 ] as const;
+
+export const CV_PATH = "/thomas-stirling-cv.pdf";

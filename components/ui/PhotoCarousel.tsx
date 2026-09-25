@@ -10,10 +10,12 @@ export default function PhotoCarousel({
   photos,
   fill = false,
   navPosition = "below",
+  imagePosition,
 }: {
   photos: readonly Photo[];
   fill?: boolean;
   navPosition?: "below" | "overlay";
+  imagePosition?: string;
 }) {
   const { trackRef, activeIndex, scrollToIndex } = useCarouselIndex(photos.length);
 
@@ -28,7 +30,14 @@ export default function PhotoCarousel({
           data-index={index}
           className={`relative w-full shrink-0 snap-start ${fill ? "h-full" : "aspect-[3/2]"}`}
         >
-          <Image src={src} alt={alt} fill unoptimized className="object-cover" />
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            unoptimized
+            className="object-cover"
+            style={imagePosition ? { objectPosition: imagePosition } : undefined}
+          />
         </div>
       ))}
     </div>

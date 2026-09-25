@@ -1,7 +1,11 @@
 "use client";
 
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
-import { ALL_SECTION_IDS, getCurrentSectionIndex } from "@/lib/getCurrentSectionIndex";
+import {
+  ALL_SECTION_IDS,
+  getCurrentSectionIndex,
+  isFreeScrollSection,
+} from "@/lib/getCurrentSectionIndex";
 import { navigateOneStep } from "@/lib/navigateSection";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
@@ -35,7 +39,7 @@ export default function ScrollController() {
     const handleWheel = (event: WheelEvent) => {
       const currentId = ALL_SECTION_IDS[getCurrentSectionIndex()];
 
-      if (currentId === "experience") return;
+      if (isFreeScrollSection(currentId)) return;
 
       if (Math.abs(event.deltaY) < WHEEL_THRESHOLD) {
         event.preventDefault();

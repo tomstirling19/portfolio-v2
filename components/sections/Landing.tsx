@@ -1,6 +1,7 @@
 "use client";
 
 import { ICON_LINKS, LINK_ICONS } from "@/components/icons/linkIcons";
+import CvDownloadButton from "@/components/ui/CvDownloadButton";
 import { DURATION_HOLD, EASE_SETTLE_MOTION, SLIDE_DISTANCE } from "@/lib/revealMotion";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import type { CSSProperties } from "react";
@@ -23,6 +24,8 @@ const CURSOR_DISAPPEARED = CURSOR_DISAPPEAR_START + CURSOR_COLLAPSE_DURATION;
 
 const ICONS_GAP = 0.05;
 const ICONS_START = CURSOR_DISAPPEARED + ICONS_GAP;
+
+const CV_BUTTON_START = ICONS_START + GAP;
 
 export default function Landing() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -96,6 +99,12 @@ export default function Landing() {
             );
           })}
         </motion.ul>
+        <motion.div
+          className="motion-fallback mt-2"
+          {...lineMotion(CV_BUTTON_START, { y: SLIDE_DISTANCE })}
+        >
+          <CvDownloadButton />
+        </motion.div>
       </motion.div>
     </section>
   );

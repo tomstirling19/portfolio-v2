@@ -60,6 +60,23 @@ export function MailIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function DownloadIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M12 3v12" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="m7 10 5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 19.5h16" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function SunIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg

@@ -1,6 +1,7 @@
 "use client";
 
 import { EXPERIENCE } from "@/content/data";
+import { EXPERIENCE_FIRST_ENTRY_ID } from "@/content/sections";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
 import { useRef } from "react";
@@ -25,7 +26,7 @@ function TimelineEntry({
   return (
     <motion.li
       ref={ref}
-      id={first ? "experience-first" : undefined}
+      id={first ? EXPERIENCE_FIRST_ENTRY_ID : undefined}
       style={reducedMotion ? undefined : { scale }}
       className="relative flex origin-left items-center gap-4 pl-6 sm:gap-6 sm:pl-8 md:gap-8"
     >

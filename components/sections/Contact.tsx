@@ -1,4 +1,5 @@
 import { ICON_LINKS, LINK_ICONS } from "@/components/icons/linkIcons";
+import CvDownloadButton from "@/components/ui/CvDownloadButton";
 
 export default function Contact() {
   return (
@@ -28,6 +29,7 @@ export default function Contact() {
           );
         })}
       </ul>
+      <CvDownloadButton />
     </div>
   );
 }

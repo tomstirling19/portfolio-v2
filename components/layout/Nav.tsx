@@ -2,7 +2,7 @@
 
 import { SECTIONS } from "@/content/sections";
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
-import { ALL_SECTION_IDS } from "@/lib/getCurrentSectionIndex";
+import { ALL_SECTION_IDS, getCurrentSectionIndex } from "@/lib/getCurrentSectionIndex";
 import { jumpToSection } from "@/lib/jumpToSection";
 import { navigateOneStep } from "@/lib/navigateSection";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
@@ -74,23 +74,14 @@ export default function Nav() {
   }, [activeIndex]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id === "landing" ? null : entry.target.id);
-          }
-        }
-      },
-      { rootMargin: "-40% 0px -40% 0px" },
-    );
+    const updateActiveId = () => {
+      const currentId = ALL_SECTION_IDS[getCurrentSectionIndex()];
+      setActiveId(currentId === "landing" ? null : currentId);
+    };
 
-    for (const id of ALL_SECTION_IDS) {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    }
-
-    return () => observer.disconnect();
+    updateActiveId();
+    window.addEventListener("scroll", updateActiveId, { passive: true });
+    return () => window.removeEventListener("scroll", updateActiveId);
   }, []);
 
   useEffect(() => {
@@ -131,6 +122,7 @@ export default function Nav() {
           Menu
         </button>
         <div
+          inert={!mobileOpen}
           className={`grid px-4 transition-[grid-template-rows] duration-300 ease-out ${
             mobileOpen ? "grid-rows-[1fr] pb-4" : "grid-rows-[0fr]"
           }`}
