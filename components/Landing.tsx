@@ -1,6 +1,7 @@
 "use client";
 
 import { ICON_LINKS, LINK_ICONS } from "@/components/icons/linkIcons";
+import { DURATION_HOLD, EASE_SETTLE_MOTION, SLIDE_DISTANCE } from "@/lib/revealMotion";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import type { CSSProperties } from "react";
 import { useRef } from "react";
@@ -9,9 +10,6 @@ const NAME = "Thomas Stirling";
 const TYPEWRITER_CHAR_DURATION = 0.08;
 const TYPEWRITER_DURATION = NAME.length * TYPEWRITER_CHAR_DURATION;
 
-const DURATION_HOLD = 0.7;
-const EASE_SETTLE: [number, number, number, number] = [0.16, 0.9, 0.2, 1];
-const SLIDE_DISTANCE = 150;
 const GAP = 0.15;
 const CURSOR_COLLAPSE_DURATION = 0.2;
 const MIN_CURSOR_BLINKS = 3;
@@ -42,7 +40,7 @@ export default function Landing() {
       : {
           initial: { opacity: 0, ...initial },
           animate: { opacity: 1, x: 0, y: 0 },
-          transition: { duration: DURATION_HOLD, ease: EASE_SETTLE, delay },
+          transition: { duration: DURATION_HOLD, ease: EASE_SETTLE_MOTION, delay },
         };
 
   return (

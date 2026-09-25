@@ -27,7 +27,6 @@ export function useCarouselIndex(itemCount: number) {
 
   const scrollToIndex = (index: number) => {
     const slide = trackRef.current?.children[index] as HTMLElement | undefined;
-    // Instant, not smooth: clicking a dot/arrow should feel immediate.
     slide?.scrollIntoView({ behavior: "instant" as ScrollBehavior, inline: "start", block: "nearest" });
   };
 

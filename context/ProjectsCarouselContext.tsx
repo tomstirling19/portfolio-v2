@@ -24,7 +24,7 @@ export function ProjectsCarouselProvider({ children }: { children: ReactNode }) 
 }
 
 export function useProjectsCarousel() {
-  const ctx = useContext(ProjectsCarouselContext);
-  if (!ctx) throw new Error("useProjectsCarousel must be used within ProjectsCarouselProvider");
-  return ctx;
+  const context = useContext(ProjectsCarouselContext);
+  if (!context) throw new Error("useProjectsCarousel must be used within ProjectsCarouselProvider");
+  return context;
 }

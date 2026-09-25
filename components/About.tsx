@@ -3,17 +3,12 @@
 import MarginNote from "@/components/MarginNote";
 import PhotoCarousel from "@/components/PhotoCarousel";
 import { ABOUT_PHOTOS } from "@/content/data";
+import { DURATION_HOLD, EASE_SETTLE_CSS, SLIDE_DISTANCE } from "@/lib/revealMotion";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
-// Diagonal seam shared by both panels so their edges line up exactly.
 const DIAGONAL_CLIP_PHOTO = "polygon(0 0, 38% 0, 24% 100%, 0 100%)";
 const DIAGONAL_CLIP_TEXT = "polygon(24% 100%, 38% 0, 100% 0, 100% 100%)";
-
-// Same feel as the landing name/icons: a 150px settle over 0.7s on this ease.
-const SLIDE_DISTANCE = 150;
-const DURATION_HOLD = 0.7;
-const EASE_SETTLE = "cubic-bezier(0.16, 0.9, 0.2, 1)";
 
 function AboutText({ revealed }: { revealed: boolean }) {
   const reducedMotion = useReducedMotion();
@@ -26,7 +21,7 @@ function AboutText({ revealed }: { revealed: boolean }) {
           : {
               opacity: revealed ? 1 : 0,
               transform: revealed ? "translateY(0)" : `translateY(${SLIDE_DISTANCE}px)`,
-              transition: `opacity ${DURATION_HOLD}s ${EASE_SETTLE}, transform ${DURATION_HOLD}s ${EASE_SETTLE}`,
+              transition: `opacity ${DURATION_HOLD}s ${EASE_SETTLE_CSS}, transform ${DURATION_HOLD}s ${EASE_SETTLE_CSS}`,
             }
       }
       className="motion-fallback flex flex-col gap-5 text-lg"
@@ -53,8 +48,6 @@ export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
 
-  // Plain IntersectionObserver, same proven primitive as Nav.tsx: reveal
-  // once on first entry, then leave it — no re-triggering on scroll away.
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -78,16 +71,13 @@ export default function About() {
       id="about"
       className="scroll-mt-14 snap-start md:scroll-mt-0 [scroll-snap-stop:always]"
     >
-      {/* mobile: photo + text stacked, one stop */}
       <div className="flex min-h-screen flex-col justify-center gap-8 px-6 py-24 md:hidden">
         <PhotoCarousel photos={ABOUT_PHOTOS} />
         <AboutText revealed={revealed} />
       </div>
 
-      {/* desktop: diagonal split, photo and text together, one stop */}
       <div className="relative hidden h-screen overflow-hidden md:block">
         <div className="absolute inset-0" style={{ clipPath: DIAGONAL_CLIP_PHOTO }}>
-          {/* ponytail: overlay nav centers on the full box; harmless while ABOUT_PHOTOS has <2 entries, re-check alignment once a real carousel ships */}
           <PhotoCarousel photos={ABOUT_PHOTOS} fill navPosition="overlay" />
         </div>
         <div className="bg-ground absolute inset-0" style={{ clipPath: DIAGONAL_CLIP_TEXT }}>

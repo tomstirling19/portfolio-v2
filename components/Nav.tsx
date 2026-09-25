@@ -92,9 +92,6 @@ export default function Nav() {
     return () => observer.disconnect();
   }, []);
 
-  // Up/Down jump a full section, matching the nav's own controlled-scroll feel.
-  // Reads position straight from the DOM rather than React state, so rapid
-  // keypresses in a row each see where the page actually is right now.
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;

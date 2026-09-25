@@ -6,23 +6,9 @@ import { jumpToSection } from "@/lib/jumpToSection";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 
-// Jump distance (e.g. from wherever the user stopped inside free-scrolling
-// experience) varies too much for a fixed timer — a short one unlocks mid-
-// glide and a new wheel tick interrupts the scroll, leaving it half-settled.
-// scrollend fires when the animation actually finishes; this is just the
-// safety net if a browser doesn't support that event.
 const COOLDOWN_FALLBACK_MS = 1200;
-// A single mouse-wheel "click" or light trackpad touch easily sends 12-40px
-// deltas; too low a threshold made any incidental nudge trigger a full jump.
-const WHEEL_THRESHOLD = 40;
+const WHEEL_THRESHOLD = 15;
 
-/**
- * Owns wheel-driven navigation between single-viewport sections and the
- * projects carousel. "experience" is deliberately excluded — it's taller
- * than the viewport, and native free-scroll is what lets every entry
- * actually pass through the magnification point instead of getting
- * blown past by trackpad momentum.
- */
 export default function ScrollController() {
   const reducedMotion = useReducedMotion();
   const { activeIndex, count, goTo } = useProjectsCarousel();
@@ -50,13 +36,8 @@ export default function ScrollController() {
       const currentIndex = getCurrentIndex();
       const currentId = ALL_IDS[currentIndex];
 
-      // Tall, free-scrolling section: let native scroll + CSS snap own it,
-      // including small residual deltas from trackpad momentum.
       if (currentId === "experience") return;
 
-      // Every other section: we own ALL wheel input here, full stop — even
-      // sub-threshold deltas, so residual momentum can't drift the page off
-      // its snapped position once we've placed it there.
       if (Math.abs(event.deltaY) < WHEEL_THRESHOLD) {
         event.preventDefault();
         return;
@@ -84,11 +65,10 @@ export default function ScrollController() {
           lock();
           return;
         }
-        // At a carousel boundary: fall through to the normal section jump.
       }
 
       const nextId = ALL_IDS[goingDown ? currentIndex + 1 : currentIndex - 1];
-      if (!nextId) return; // top/bottom of the page: allow native rubber-band
+      if (!nextId) return;
 
       event.preventDefault();
       jumpToSection(nextId);
