@@ -71,10 +71,16 @@ export const PROJECTS = [
 ] as const;
 
 export const INTERESTS = [
+  "Films",
+  "PC Gaming",
+  "Fashion",
+  "Hiking",
   "Tennis",
-  "Japanese casual & outdoor fashion",
+  "Football",
+  "Running",
+  "Cycling",
+  "Music",
   "Sketching",
-  "Gaming",
 ] as const;
 
 export const LINKS = [

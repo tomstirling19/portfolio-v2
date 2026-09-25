@@ -27,18 +27,24 @@ function AboutText({ revealed }: { revealed: boolean }) {
       className="motion-fallback flex flex-col gap-5 text-lg"
     >
       <p>
-        My name is Thomas Stirling. I hold a Master&rsquo;s degree in
-        Computer Science from the University of Leeds (MEng &amp; BSc,
-        First-Class Honours).
+        Hi, I&rsquo;m Tom. I hold a Master&rsquo;s degree in Computer Science
+        from the University of Leeds (MEng &amp; BSc, First-Class Honours).
+      </p>
+      <p>
+        I&rsquo;ve had the chance to build software across defence, security,
+        healthcare, gambling &amp; entertainment, and fintech. My greatest
+        interests lie in AI, but I also like working on high-throughput and
+        efficient large distributed systems.
       </p>
       <MarginNote>
-        When not shipping code, you&rsquo;ll find me on a tennis court or
-        sketching something badly.
+        Outside of engineering, I enjoy hiking (mainly in bad weather),
+        cycling, and gaming (my playtime is too much to be discussed).
       </MarginNote>
       <p>
-        My greatest interests lie in AI, ML, data, and application
-        development. I&rsquo;m enthusiastic about all things tech and try to
-        stay updated with the latest industry developments.
+        Right now I&rsquo;m mostly researching how LLMs and agents are
+        advancing, and taking an interest in graph engineering with agents.
+        I have a personal project called Bamboo that I&rsquo;m looking to
+        experiment on.
       </p>
     </div>
   );

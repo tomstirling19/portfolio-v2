@@ -72,8 +72,7 @@ export default function Nav() {
 
   useEffect(() => {
     const updateActiveId = () => {
-      const currentId = ALL_SECTION_IDS[getCurrentSectionIndex()];
-      setActiveId(currentId === "landing" ? null : currentId);
+      setActiveId(ALL_SECTION_IDS[getCurrentSectionIndex()]);
     };
 
     updateActiveId();
@@ -88,7 +87,7 @@ export default function Nav() {
       const target = event.target as HTMLElement | null;
       if (target && /^(input|textarea|select)$/i.test(target.tagName)) return;
 
-      const navigated = navigateOneStep(event.key === "ArrowDown", {
+      const { navigated } = navigateOneStep(event.key === "ArrowDown", {
         activeIndex: activeIndexRef.current,
         count,
         goTo,

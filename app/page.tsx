@@ -21,8 +21,9 @@ export default function Home() {
 
       <About />
 
-      {SECTIONS.filter(({ id }) => id !== "about").map(({ id, label }, index) => {
+      {SECTIONS.filter(({ id }) => id in CONTENT).map(({ id, label }) => {
         const Content = CONTENT[id];
+        const sectionNumber = SECTIONS.findIndex((section) => section.id === id) + 1;
         return (
           <Reveal key={id}>
             <section
@@ -32,7 +33,7 @@ export default function Home() {
               <div className="mx-auto w-full max-w-2xl">
                 <div className="border-warm-accent/30 mb-10 flex items-baseline gap-3 border-b pb-3">
                   <span className="text-warm-accent font-mono text-sm">
-                    {String(index + 2).padStart(2, "0")}
+                    {String(sectionNumber).padStart(2, "0")}
                   </span>
                   <h2 className="text-ink font-mono text-xl tracking-wide uppercase">
                     {label}

@@ -11,28 +11,29 @@ type CarouselState = {
   goTo: (index: number) => void;
 };
 
-export function navigateOneStep(goingDown: boolean, carousel: CarouselState): boolean {
+type NavigateResult = { navigated: boolean; done?: Promise<void> };
+
+export function navigateOneStep(goingDown: boolean, carousel: CarouselState): NavigateResult {
   const currentIndex = getCurrentSectionIndex();
   const currentId = ALL_SECTION_IDS[currentIndex];
 
-  if (isFreeScrollSection(currentId)) return false;
+  if (isFreeScrollSection(currentId)) return { navigated: false };
 
   if (currentId === "projects") {
     const atEnd = carousel.activeIndex >= carousel.count - 1;
     const atStart = carousel.activeIndex <= 0;
     if (goingDown && !atEnd) {
       carousel.goTo(carousel.activeIndex + 1);
-      return true;
+      return { navigated: true };
     }
     if (!goingDown && !atStart) {
       carousel.goTo(carousel.activeIndex - 1);
-      return true;
+      return { navigated: true };
     }
   }
 
   const nextId = ALL_SECTION_IDS[goingDown ? currentIndex + 1 : currentIndex - 1];
-  if (!nextId) return false;
+  if (!nextId) return { navigated: false };
 
-  jumpToSection(nextId);
-  return true;
+  return { navigated: true, done: jumpToSection(nextId) };
 }

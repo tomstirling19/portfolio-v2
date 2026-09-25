@@ -1,6 +1,7 @@
 export const EXPERIENCE_FIRST_ENTRY_ID = "experience-first";
 
 export const SECTIONS = [
+  { id: "landing", label: "Home", freeScroll: false, enterAnchorId: null },
   { id: "about", label: "About", freeScroll: false, enterAnchorId: null },
   {
     id: "experience",

@@ -34,32 +34,37 @@ function glideScrollTo(targetTop: number, duration: number) {
   });
 }
 
-export function jumpToSection(id: string) {
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const behavior: ScrollBehavior = reducedMotion ? "instant" : "smooth";
-
+function targetTopFor(id: string) {
   const anchorId = SECTIONS.find((section) => section.id === id)?.enterAnchorId;
-  const anchorEntry = anchorId ? document.getElementById(anchorId) : null;
+  const anchorEl = anchorId ? document.getElementById(anchorId) : null;
+  const target = anchorEl ?? document.getElementById(id);
+  if (!target) return null;
 
-  if (anchorEntry) {
-    const html = document.documentElement;
-    const previousSnapType = html.style.scrollSnapType;
-    html.style.scrollSnapType = "none";
-    void html.offsetHeight;
+  const rect = target.getBoundingClientRect();
+  return anchorEl
+    ? window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2
+    : window.scrollY + rect.top;
+}
 
-    const rect = anchorEntry.getBoundingClientRect();
-    const targetTop = window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2;
+export function jumpToSection(id: string): Promise<void> {
+  const targetTop = targetTopFor(id);
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  let done: Promise<void> = Promise.resolve();
+
+  if (targetTop !== null) {
     if (reducedMotion) {
       window.scrollTo({ top: targetTop, behavior: "instant" });
-      html.style.scrollSnapType = previousSnapType;
     } else {
-      glideScrollTo(targetTop, GLIDE_DURATION_MS).then(() => {
+      const html = document.documentElement;
+      const previousSnapType = html.style.scrollSnapType;
+      html.style.scrollSnapType = "none";
+      void html.offsetHeight;
+
+      done = glideScrollTo(targetTop, GLIDE_DURATION_MS).then(() => {
         html.style.scrollSnapType = previousSnapType;
       });
     }
-  } else {
-    document.getElementById(id)?.scrollIntoView({ behavior });
   }
 
   history.replaceState(
@@ -67,4 +72,6 @@ export function jumpToSection(id: string) {
     "",
     id === "landing" ? location.pathname + location.search : `#${id}`,
   );
+
+  return done;
 }

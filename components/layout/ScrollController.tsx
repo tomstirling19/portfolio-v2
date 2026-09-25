@@ -11,7 +11,6 @@ import { navigateOneStep } from "@/lib/navigateSection";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 
-const COOLDOWN_FALLBACK_MS = 1200;
 const WHEEL_THRESHOLD = 15;
 
 export default function ScrollController() {
@@ -22,16 +21,6 @@ export default function ScrollController() {
 
   useEffect(() => {
     if (reducedMotion) return;
-
-    const lock = () => {
-      lockedRef.current = true;
-      const unlock = () => {
-        lockedRef.current = false;
-        window.removeEventListener("scrollend", unlock);
-      };
-      window.addEventListener("scrollend", unlock, { once: true });
-      window.setTimeout(unlock, COOLDOWN_FALLBACK_MS);
-    };
 
     const handleWheel = (event: WheelEvent) => {
       const currentId = ALL_SECTION_IDS[getCurrentSectionIndex()];
@@ -48,14 +37,19 @@ export default function ScrollController() {
         return;
       }
 
-      const navigated = navigateOneStep(event.deltaY > 0, {
+      const { navigated, done } = navigateOneStep(event.deltaY > 0, {
         activeIndex: activeIndexRef.current,
         count,
         goTo,
       });
       if (navigated) {
         event.preventDefault();
-        lock();
+        if (done) {
+          lockedRef.current = true;
+          done.finally(() => {
+            lockedRef.current = false;
+          });
+        }
       }
     };
 
