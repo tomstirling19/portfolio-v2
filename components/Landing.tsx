@@ -89,9 +89,9 @@ export default function Landing() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="text-icon-orange/80 hover:text-icon-orange block transition-colors"
+                  className="text-icon-orange block transition-all hover:-translate-y-1 hover:scale-110 hover:drop-shadow-[0_0_12px_var(--color-icon-orange)]"
                 >
-                  <Icon className="h-7 w-7" />
+                  <Icon className="h-9 w-9 sm:h-10 sm:w-10" />
                 </a>
               </li>
             );

@@ -1,5 +1,10 @@
+type ViewTransition = {
+  ready: Promise<void>;
+  finished: Promise<void>;
+};
+
 type ViewTransitionDocument = Document & {
-  startViewTransition: (callback: () => void) => void;
+  startViewTransition: (callback: () => void) => ViewTransition;
 };
 
 function hasViewTransitions(doc: Document): doc is ViewTransitionDocument {
@@ -19,7 +24,11 @@ export function jumpToSection(id: string) {
   };
 
   if (hasViewTransitions(document)) {
-    document.startViewTransition(run);
+    const transition = document.startViewTransition(run);
+    // A transition started before this one finishes gets skipped, which
+    // rejects these promises — a fast double-click shouldn't throw.
+    transition.ready.catch(() => {});
+    transition.finished.catch(() => {});
   } else {
     run();
   }
