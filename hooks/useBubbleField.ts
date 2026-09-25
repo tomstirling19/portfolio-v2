@@ -1,7 +1,7 @@
 "use client";
 
 import Matter from "matter-js";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useSyncExternalStore } from "react";
 
 const BASE_RADIUS = 45;
 const RADIUS_PER_CHAR = 1.8;
@@ -32,11 +32,25 @@ function createWalls(width: number, height: number) {
   ];
 }
 
-function createWanderer(bodies: Matter.Body[], mouseConstraint: Matter.MouseConstraint) {
+function subscribeToPointerType(onChange: () => void) {
+  const mql = window.matchMedia("(pointer: fine)");
+  mql.addEventListener("change", onChange);
+  return () => mql.removeEventListener("change", onChange);
+}
+
+function hasFinePointer() {
+  return window.matchMedia("(pointer: fine)").matches;
+}
+
+function hasFinePointerOnServer() {
+  return false;
+}
+
+function createWanderer(bodies: Matter.Body[], mouseConstraint?: Matter.MouseConstraint) {
   const angles = bodies.map(() => Math.random() * Math.PI * 2);
   return () => {
     bodies.forEach((body, index) => {
-      if (mouseConstraint.body === body) return;
+      if (mouseConstraint?.body === body) return;
       angles[index] += (Math.random() - 0.5) * WANDER_TURN;
       Matter.Body.applyForce(body, body.position, {
         x: Math.cos(angles[index]) * WANDER_FORCE,
@@ -50,6 +64,11 @@ export function useBubbleField(items: readonly string[], reducedMotion: boolean 
   const containerRef = useRef<HTMLDivElement>(null);
   const bubbleElsRef = useRef<(HTMLDivElement | null)[]>([]);
   const radii = useMemo(() => items.map(radiusFor), [items]);
+  const draggable = useSyncExternalStore(
+    subscribeToPointerType,
+    hasFinePointer,
+    hasFinePointerOnServer,
+  );
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -69,17 +88,18 @@ export function useBubbleField(items: readonly string[], reducedMotion: boolean 
       });
     });
 
-    const mouse = Matter.Mouse.create(container);
-    const mouseConstraint = Matter.MouseConstraint.create(engine, {
-      mouse,
-      constraint: { stiffness: 0.15, render: { visible: false } },
-    });
+    Matter.Composite.add(engine.world, [...bodies, ...createWalls(width, height)]);
 
-    Matter.Composite.add(engine.world, [
-      ...bodies,
-      ...createWalls(width, height),
-      mouseConstraint,
-    ]);
+    let mouse: Matter.Mouse | undefined;
+    let mouseConstraint: Matter.MouseConstraint | undefined;
+    if (draggable) {
+      mouse = Matter.Mouse.create(container);
+      mouseConstraint = Matter.MouseConstraint.create(engine, {
+        mouse,
+        constraint: { stiffness: 0.15, render: { visible: false } },
+      });
+      Matter.Composite.add(engine.world, mouseConstraint);
+    }
 
     const wander = createWanderer(bodies, mouseConstraint);
     Matter.Events.on(engine, "beforeUpdate", wander);
@@ -101,10 +121,10 @@ export function useBubbleField(items: readonly string[], reducedMotion: boolean 
       Matter.Runner.stop(runner);
       Matter.Events.off(engine, "beforeUpdate", wander);
       Matter.Events.off(engine, "afterUpdate", syncPositions);
-      Matter.Mouse.clearSourceEvents(mouse);
+      if (mouse) Matter.Mouse.clearSourceEvents(mouse);
       Matter.Engine.clear(engine);
     };
-  }, [radii, reducedMotion]);
+  }, [radii, reducedMotion, draggable]);
 
-  return { containerRef, bubbleElsRef, radii };
+  return { containerRef, bubbleElsRef, radii, draggable };
 }

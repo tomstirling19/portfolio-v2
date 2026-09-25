@@ -11,7 +11,7 @@ const BUBBLE_COLORS = [
 
 export default function BubbleField({ items }: { items: readonly string[] }) {
   const reducedMotion = useReducedMotion();
-  const { containerRef, bubbleElsRef, radii } = useBubbleField(items, reducedMotion);
+  const { containerRef, bubbleElsRef, radii, draggable } = useBubbleField(items, reducedMotion);
 
   if (reducedMotion) {
     return (
@@ -31,7 +31,7 @@ export default function BubbleField({ items }: { items: readonly string[] }) {
   return (
     <div
       ref={containerRef}
-      className="relative mx-auto aspect-square w-full max-w-md touch-none select-none"
+      className={`relative mx-auto aspect-square w-full max-w-md select-none ${draggable ? "touch-none" : ""}`}
     >
       {items.map((text, index) => {
         const radius = radii[index];
@@ -42,7 +42,7 @@ export default function BubbleField({ items }: { items: readonly string[] }) {
             ref={(el) => {
               bubbleElsRef.current[index] = el;
             }}
-            className="absolute top-0 left-0 cursor-grab active:cursor-grabbing"
+            className={draggable ? "absolute top-0 left-0 cursor-grab active:cursor-grabbing" : "absolute top-0 left-0"}
             style={{ width: radius * 2, height: radius * 2, willChange: "transform" }}
           >
             <div

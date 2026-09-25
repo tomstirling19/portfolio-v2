@@ -1,7 +1,8 @@
 "use client";
 
-import { ICON_LINKS, LINK_ICONS } from "@/components/icons/linkIcons";
+import { ICON_LINKS } from "@/components/icons/linkIcons";
 import CvDownloadButton from "@/components/ui/CvDownloadButton";
+import { SocialLink } from "@/components/ui/SocialLink";
 import { DURATION_HOLD, EASE_SETTLE_MOTION, SLIDE_DISTANCE } from "@/lib/revealMotion";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import type { CSSProperties } from "react";
@@ -82,22 +83,11 @@ export default function Landing() {
           className="motion-fallback mt-2 flex items-center gap-6"
           {...lineMotion(ICONS_START, { y: SLIDE_DISTANCE })}
         >
-          {ICON_LINKS.map(({ label, href }) => {
-            const Icon = LINK_ICONS[label];
-            return (
-              <li key={label}>
-                <a
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="text-icon-orange block transition-all hover:-translate-y-1 hover:scale-110 hover:drop-shadow-[0_0_12px_var(--color-icon-orange)]"
-                >
-                  <Icon className="h-9 w-9 sm:h-10 sm:w-10" />
-                </a>
-              </li>
-            );
-          })}
+          {ICON_LINKS.map(({ label, href }) => (
+            <li key={label}>
+              <SocialLink label={label} href={href} variant="icon" />
+            </li>
+          ))}
         </motion.ul>
         <motion.div
           className="motion-fallback mt-2"
