@@ -1,7 +1,20 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { GithubIcon, GitlabIcon, LinkedinIcon, MailIcon } from "@/components/icons/BrandIcons";
+import { LINKS } from "@/content/data";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import type { CSSProperties } from "react";
+import { useRef } from "react";
+
+const ICONS = {
+  LinkedIn: LinkedinIcon,
+  GitHub: GithubIcon,
+  GitLab: GitlabIcon,
+  Email: MailIcon,
+};
+const ICON_LINKS = LINKS.filter(
+  (link): link is (typeof LINKS)[number] & { label: keyof typeof ICONS } => link.label in ICONS,
+);
 
 const NAME = "Thomas Stirling";
 const TYPEWRITER_CHAR_DURATION = 0.08;
@@ -21,10 +34,18 @@ const CURSOR_DISAPPEAR_START = SW_ENG_SETTLED + GAP;
 const CURSOR_BLINK_PERIOD = CURSOR_DISAPPEAR_START / MIN_CURSOR_BLINKS;
 const CURSOR_DISAPPEARED = CURSOR_DISAPPEAR_START + CURSOR_COLLAPSE_DURATION;
 
-const PLACEHOLDER_START = CURSOR_DISAPPEARED + GAP;
+const ICONS_START = CURSOR_DISAPPEARED + GAP;
 
 export default function Landing() {
+  const sectionRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const exitScale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
+  const exitOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
   const lineMotion = (delay: number, initial: { x?: number; y?: number }) =>
     reducedMotion
@@ -38,6 +59,7 @@ export default function Landing() {
   return (
     <section
       id="landing"
+      ref={sectionRef}
       className="flex min-h-screen scroll-mt-14 flex-col items-center justify-center gap-4 px-6 snap-start md:scroll-mt-0"
       style={
         {
@@ -51,22 +73,42 @@ export default function Landing() {
         } as CSSProperties
       }
     >
-      <h1 className="text-warm-accent flex items-baseline text-4xl sm:text-5xl md:text-6xl">
-        <span className="typewriter-text">{NAME}</span>
-        <span className="typewriter-cursor" aria-hidden="true" />
-      </h1>
-      <motion.p
-        className="motion-fallback text-cool-accent font-mono text-xl sm:text-2xl md:text-3xl"
-        {...lineMotion(SW_ENG_START, { x: SLIDE_DISTANCE })}
+      <motion.div
+        style={reducedMotion ? undefined : { scale: exitScale, opacity: exitOpacity }}
+        className="flex flex-col items-center gap-4"
       >
-        Software Engineer
-      </motion.p>
-      <motion.p
-        className="motion-fallback font-mono text-ink/60 text-sm"
-        {...lineMotion(PLACEHOLDER_START, { y: SLIDE_DISTANCE })}
-      >
-        Leeds, UK
-      </motion.p>
+        <h1 className="text-warm-accent flex items-baseline text-4xl sm:text-5xl md:text-6xl">
+          <span className="typewriter-text">{NAME}</span>
+          <span className="typewriter-cursor" aria-hidden="true" />
+        </h1>
+        <motion.p
+          className="motion-fallback text-cool-accent font-mono text-xl sm:text-2xl md:text-3xl"
+          {...lineMotion(SW_ENG_START, { x: SLIDE_DISTANCE })}
+        >
+          Software Engineer
+        </motion.p>
+        <motion.ul
+          className="motion-fallback mt-2 flex items-center gap-6"
+          {...lineMotion(ICONS_START, { y: SLIDE_DISTANCE })}
+        >
+          {ICON_LINKS.map(({ label, href }) => {
+            const Icon = ICONS[label];
+            return (
+              <li key={label}>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="text-ink/60 hover:text-warm-accent block transition-colors"
+                >
+                  <Icon className="h-7 w-7" />
+                </a>
+              </li>
+            );
+          })}
+        </motion.ul>
+      </motion.div>
     </section>
   );
 }

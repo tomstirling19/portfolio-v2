@@ -9,7 +9,8 @@ import {
 import type { PointerEvent, ReactNode } from "react";
 import { useState } from "react";
 
-const GLOW_SIZE = 160;
+const GLOW_SIZE = 90;
+const GLOW_MAX_OPACITY = 0.35;
 const SPRING_STIFFNESS = 300;
 const SPRING_DAMPING = 30;
 const OPACITY_DURATION = 0.15;
@@ -62,9 +63,9 @@ export default function CursorGlow({ children }: { children: ReactNode }) {
           translateX: "-50%",
           translateY: "-50%",
           background:
-            "radial-gradient(circle, var(--color-warm-accent) 0%, transparent 70%)",
+            "radial-gradient(circle, var(--color-warm-accent) 0%, transparent 60%)",
         }}
-        animate={{ opacity: visible ? 1 : 0 }}
+        animate={{ opacity: visible ? GLOW_MAX_OPACITY : 0 }}
         transition={{ duration: OPACITY_DURATION }}
       />
       {children}

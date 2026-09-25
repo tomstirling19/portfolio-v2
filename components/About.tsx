@@ -2,13 +2,36 @@
 
 import MarginNote from "@/components/MarginNote";
 import PhotoCarousel from "@/components/PhotoCarousel";
-import { ABOUT_PHOTOS } from "@/content/data";
+import { ABOUT_PHOTOS, LINKS } from "@/content/data";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 
 const TEXT_REVEAL_START = 0.45;
 const TEXT_REVEAL_END = 0.72;
 const TEXT_RISE_DISTANCE = 24;
+
+// Diagonal seam shared by both panels so their edges line up exactly.
+const DIAGONAL_CLIP_PHOTO = "polygon(0 0, 62% 0, 46% 100%, 0 100%)";
+const DIAGONAL_CLIP_TEXT = "polygon(46% 100%, 62% 0, 100% 0, 100% 100%)";
+
+function QuickLinks() {
+  return (
+    <ul className="flex flex-wrap gap-4">
+      {LINKS.map(({ label, href }) => (
+        <li key={label}>
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-cool-accent hover:text-warm-accent font-mono text-xs transition-colors"
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -25,12 +48,13 @@ export default function About() {
     [TEXT_RISE_DISTANCE, 0],
   );
 
-  const text = (
+  const textBody = (
     <>
+      <QuickLinks />
       <p>
-        My name is Thomas Stirling. I hold a Master&rsquo;s degree in Computer
-        Science from the University of Leeds (MEng &amp; BSc, First-Class
-        Honours).
+        My name is Thomas Stirling. I hold a Master&rsquo;s degree in
+        Computer Science from the University of Leeds (MEng &amp; BSc,
+        First-Class Honours).
       </p>
       <MarginNote>
         When not shipping code, you&rsquo;ll find me on a tennis court or
@@ -52,7 +76,7 @@ export default function About() {
       >
         <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-[1.1fr_1fr] md:items-center">
           <PhotoCarousel photos={ABOUT_PHOTOS} />
-          <div className="flex flex-col gap-4">{text}</div>
+          <div className="flex flex-col gap-4">{textBody}</div>
         </div>
       </section>
     );
@@ -62,16 +86,26 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="scroll-mt-14 relative h-[200vh] snap-start md:scroll-mt-0"
+      className="scroll-mt-14 relative snap-start md:scroll-mt-0 md:h-[200vh]"
     >
-      <div className="sticky top-0 flex h-screen items-center px-6">
-        <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-[1.1fr_1fr] md:items-center">
-          <PhotoCarousel photos={ABOUT_PHOTOS} />
+      {/* mobile: stacked, no diagonal, no scroll-jacked reveal */}
+      <div className="flex flex-col gap-8 px-6 py-24 md:hidden">
+        <PhotoCarousel photos={ABOUT_PHOTOS} />
+        <div className="flex flex-col gap-4">{textBody}</div>
+      </div>
+
+      {/* desktop: diagonal split, sticky two-stage reveal */}
+      <div className="sticky top-0 hidden h-screen overflow-hidden md:block">
+        <div className="absolute inset-0" style={{ clipPath: DIAGONAL_CLIP_PHOTO }}>
+          {/* ponytail: overlay nav centers on the full box; harmless while ABOUT_PHOTOS has <2 entries, re-check alignment once a real carousel ships */}
+          <PhotoCarousel photos={ABOUT_PHOTOS} fill navPosition="overlay" />
+        </div>
+        <div className="bg-ground absolute inset-0" style={{ clipPath: DIAGONAL_CLIP_TEXT }}>
           <motion.div
             style={{ opacity: textOpacity, y: textY }}
-            className="flex flex-col gap-4"
+            className="flex h-full flex-col justify-center gap-4 py-24 pr-[6%] pl-[64%]"
           >
-            {text}
+            {textBody}
           </motion.div>
         </div>
       </div>

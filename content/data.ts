@@ -60,7 +60,8 @@ export const INTERESTS = [
 ] as const;
 
 export const LINKS = [
-  { label: "GitHub", href: "https://github.com/tomstirling19" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/thomasdstirling" },
+  { label: "GitHub", href: "https://github.com/tomstirling19" },
+  { label: "GitLab", href: "https://gitlab.com/tomstirling" },
   { label: "Email", href: "mailto:tomstirling19@gmail.com" },
 ] as const;

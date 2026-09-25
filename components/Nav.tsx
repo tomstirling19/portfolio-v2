@@ -61,14 +61,14 @@ export default function Nav() {
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
+            setActiveId(entry.target.id === "landing" ? null : entry.target.id);
           }
         }
       },
       { rootMargin: "-40% 0px -40% 0px" },
     );
 
-    for (const { id } of SECTIONS) {
+    for (const id of ["landing", ...SECTIONS.map((section) => section.id)]) {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     }
