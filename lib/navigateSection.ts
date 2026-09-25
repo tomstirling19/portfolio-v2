@@ -3,7 +3,9 @@ import {
   getCurrentSectionIndex,
   isFreeScrollSection,
 } from "@/lib/getCurrentSectionIndex";
-import { jumpToSection } from "@/lib/jumpToSection";
+import { jumpToSection, smoothScrollBy } from "@/lib/jumpToSection";
+
+const FREE_SCROLL_STEP_PX = 480;
 
 type CarouselState = {
   activeIndex: number;
@@ -17,7 +19,10 @@ export function navigateOneStep(goingDown: boolean, carousel: CarouselState): Na
   const currentIndex = getCurrentSectionIndex();
   const currentId = ALL_SECTION_IDS[currentIndex];
 
-  if (isFreeScrollSection(currentId)) return { navigated: false };
+  if (isFreeScrollSection(currentId)) {
+    const step = goingDown ? FREE_SCROLL_STEP_PX : -FREE_SCROLL_STEP_PX;
+    return { navigated: true, done: smoothScrollBy(step) };
+  }
 
   if (currentId === "projects") {
     const atEnd = carousel.activeIndex >= carousel.count - 1;

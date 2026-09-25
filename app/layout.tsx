@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, JetBrains_Mono } from "next/font/google";
-import CursorGlow from "@/components/layout/CursorGlow";
+import CustomCursor from "@/components/layout/CustomCursor";
 import Footer from "@/components/layout/Footer";
 import Nav from "@/components/layout/Nav";
+import ScreenGlow from "@/components/layout/ScreenGlow";
 import ScrollController from "@/components/layout/ScrollController";
 import ScrollProgress from "@/components/layout/ScrollProgress";
 import ThemeToggle from "@/components/layout/ThemeToggle";
@@ -70,15 +71,17 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <ScreenGlow />
+        <CustomCursor />
         <ProjectsCarouselProvider>
           <ScrollController />
           <ScrollProgress />
           <ThemeToggle />
+          <Footer />
           <Nav />
           <main id="main-content" className="flex flex-1 flex-col">
-            <CursorGlow>{children}</CursorGlow>
+            {children}
           </main>
-          <Footer />
         </ProjectsCarouselProvider>
       </body>
     </html>

@@ -8,11 +8,11 @@ const RADIUS_PER_CHAR = 1.8;
 const MAX_RADIUS = 85;
 
 const WALL_THICKNESS = 60;
-const RESTITUTION = 0.5;
-const FRICTION_AIR = 0.025;
+const RESTITUTION = 0.6;
+const FRICTION_AIR = 0.018;
 
-const WANDER_FORCE = 0.00065;
-const WANDER_TURN = 0.22;
+const WANDER_FORCE = 0.0019;
+const WANDER_TURN = 0.32;
 
 function radiusFor(text: string) {
   return Math.min(BASE_RADIUS + text.length * RADIUS_PER_CHAR, MAX_RADIUS);

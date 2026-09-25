@@ -56,7 +56,7 @@ export default function Projects() {
           return (
             <div
               key={name}
-              className="bg-raised absolute inset-0 m-auto h-full w-[78%] cursor-pointer overflow-hidden rounded-md transition-[transform,opacity,filter] duration-500 ease-out"
+              className="bg-raised absolute inset-0 m-auto h-full w-[78%] cursor-pointer overflow-hidden rounded-md transition-[transform,opacity,filter] duration-700 ease-in-out"
               style={{
                 zIndex: style.zIndex,
                 transform: `translateX(${style.x}px) scale(${style.scale})`,

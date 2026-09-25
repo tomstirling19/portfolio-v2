@@ -46,6 +46,18 @@ function targetTopFor(id: string) {
     : window.scrollY + rect.top;
 }
 
+export function smoothScrollBy(delta: number): Promise<void> {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const targetTop = window.scrollY + delta;
+
+  if (reducedMotion) {
+    window.scrollTo({ top: targetTop, behavior: "instant" });
+    return Promise.resolve();
+  }
+
+  return glideScrollTo(targetTop, GLIDE_DURATION_MS);
+}
+
 export function jumpToSection(id: string): Promise<void> {
   const targetTop = targetTopFor(id);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

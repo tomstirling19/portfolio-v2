@@ -11,10 +11,11 @@ export function isFreeScrollSection(id: string) {
 }
 
 export function getCurrentSectionIndex() {
+  const threshold = window.innerHeight / 2;
   let currentIndex = 0;
   ALL_SECTION_IDS.forEach((id, index) => {
     const el = document.getElementById(id);
-    if (el && el.getBoundingClientRect().top <= 1) currentIndex = index;
+    if (el && el.getBoundingClientRect().top <= threshold) currentIndex = index;
   });
   return currentIndex;
 }
