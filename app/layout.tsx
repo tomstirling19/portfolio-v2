@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased motion-safe:snap-y motion-safe:snap-proximity motion-safe:scroll-smooth`}
+      className={`${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased motion-safe:snap-y motion-safe:snap-mandatory motion-safe:scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-ground text-ink font-serif">
         <noscript>

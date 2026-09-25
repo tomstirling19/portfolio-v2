@@ -20,20 +20,7 @@ function NavLink({
     event.preventDefault();
     // scroll-behavior:smooth + scroll-snap-type can cancel the native anchor
     // jump outright (net 0px movement); an instant jump is reliable.
-    const el = document.getElementById(id);
-    if (el) {
-      // Tall scroll-linked reveal sections (e.g. the diagonal about hero) land
-      // past the reveal threshold instead of at the top, so content is visible.
-      const isTallReveal = el.offsetHeight > window.innerHeight * 1.5;
-      if (isTallReveal) {
-        window.scrollTo({
-          top: el.offsetTop + el.offsetHeight * 0.75,
-          behavior: "instant" as ScrollBehavior,
-        });
-      } else {
-        el.scrollIntoView({ behavior: "instant" as ScrollBehavior });
-      }
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: "instant" as ScrollBehavior });
     history.replaceState(null, "", `#${id}`);
     onNavigate?.(event);
   };
@@ -106,7 +93,7 @@ export default function Nav() {
     <>
       <nav
         aria-label="Section navigation"
-        className="fixed top-1/2 right-8 hidden -translate-y-1/2 flex-col gap-3 md:flex"
+        className="fixed top-1/2 right-8 z-40 hidden -translate-y-1/2 flex-col gap-3 md:flex"
       >
         <NavLinks activeId={activeId} />
       </nav>

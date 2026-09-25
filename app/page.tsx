@@ -27,7 +27,7 @@ export default function Home() {
           <Reveal key={id}>
             <section
               id={id}
-              className="flex min-h-screen scroll-mt-14 items-center justify-center px-6 py-24 snap-start md:scroll-mt-0"
+              className="flex min-h-screen scroll-mt-14 items-center justify-center px-6 py-24 snap-start md:scroll-mt-0 md:pr-44"
             >
               <div className="mx-auto w-full max-w-2xl">
                 <div className="border-warm-accent/30 mb-10 flex items-baseline gap-3 border-b pb-3">
