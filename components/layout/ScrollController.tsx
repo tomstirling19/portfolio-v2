@@ -1,6 +1,7 @@
 "use client";
 
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
+import { useLatestRef } from "@/hooks/useLatestRef";
 import {
   ALL_SECTION_IDS,
   getCurrentSectionIndex,
@@ -16,12 +17,8 @@ const WHEEL_THRESHOLD = 15;
 export default function ScrollController() {
   const reducedMotion = useReducedMotion();
   const { activeIndex, count, goTo } = useProjectsCarousel();
-  const activeIndexRef = useRef(activeIndex);
+  const activeIndexRef = useLatestRef(activeIndex);
   const lockedRef = useRef(false);
-
-  useEffect(() => {
-    activeIndexRef.current = activeIndex;
-  }, [activeIndex]);
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -64,7 +61,7 @@ export default function ScrollController() {
 
     window.addEventListener("wheel", handleWheel, { passive: false });
     return () => window.removeEventListener("wheel", handleWheel);
-  }, [reducedMotion, count, goTo]);
+  }, [reducedMotion, count, goTo, activeIndexRef]);
 
   return null;
 }

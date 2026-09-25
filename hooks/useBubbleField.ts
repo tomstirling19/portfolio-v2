@@ -11,7 +11,6 @@ const WALL_THICKNESS = 60;
 const RESTITUTION = 0.5;
 const FRICTION_AIR = 0.025;
 
-// gives each bubble a slow, gently curving drift that never fully settles
 const WANDER_FORCE = 0.00065;
 const WANDER_TURN = 0.22;
 
@@ -47,12 +46,6 @@ function createWanderer(bodies: Matter.Body[], mouseConstraint: Matter.MouseCons
   };
 }
 
-/**
- * Drops `items` into a Matter.js world sized to the container: gentle ambient
- * drift, elastic collisions between bubbles, and drag-and-fling via the mouse.
- * Returns refs to wire up in JSX; positions are written straight to each
- * bubble's `style.transform` on every physics tick, bypassing React render.
- */
 export function useBubbleField(items: readonly string[], reducedMotion: boolean | null) {
   const containerRef = useRef<HTMLDivElement>(null);
   const bubbleElsRef = useRef<(HTMLDivElement | null)[]>([]);

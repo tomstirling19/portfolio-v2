@@ -7,6 +7,7 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   prettierConfig,
+  { settings: { react: { version: "19.3.0" } } },
   globalIgnores([
     ".next/**",
     "out/**",

@@ -2,10 +2,11 @@
 
 import { SECTIONS } from "@/content/sections";
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
+import { useLatestRef } from "@/hooks/useLatestRef";
 import { ALL_SECTION_IDS, getCurrentSectionIndex } from "@/lib/getCurrentSectionIndex";
 import { jumpToSection } from "@/lib/jumpToSection";
 import { navigateOneStep } from "@/lib/navigateSection";
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 
 function NavLink({
   id,
@@ -67,11 +68,7 @@ export default function Nav() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { activeIndex, count, goTo } = useProjectsCarousel();
-  const activeIndexRef = useRef(activeIndex);
-
-  useEffect(() => {
-    activeIndexRef.current = activeIndex;
-  }, [activeIndex]);
+  const activeIndexRef = useLatestRef(activeIndex);
 
   useEffect(() => {
     const updateActiveId = () => {
@@ -101,7 +98,7 @@ export default function Nav() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [count, goTo]);
+  }, [count, goTo, activeIndexRef]);
 
   return (
     <>
