@@ -1,24 +1,44 @@
+import About from "@/components/About";
+import Contact from "@/components/Contact";
+import Experience from "@/components/Experience";
+import Interests from "@/components/Interests";
 import Landing from "@/components/Landing";
+import Projects from "@/components/Projects";
 import Reveal from "@/components/Reveal";
 import { SECTIONS } from "@/content/sections";
+
+const CONTENT: Record<string, React.ComponentType> = {
+  experience: Experience,
+  projects: Projects,
+  interests: Interests,
+  contact: Contact,
+};
 
 export default function Home() {
   return (
     <>
       <Landing />
 
-      {SECTIONS.map(({ id, label }, index) => (
-        <Reveal key={id}>
-          <section
-            id={id}
-            className="flex min-h-screen scroll-mt-14 items-center justify-center snap-start md:scroll-mt-0"
-          >
-            <p className="font-mono text-ink/40 text-sm">
-              {String(index + 1).padStart(2, "0")} — {label}
-            </p>
-          </section>
-        </Reveal>
-      ))}
+      <About />
+
+      {SECTIONS.filter(({ id }) => id !== "about").map(({ id, label }, index) => {
+        const Content = CONTENT[id];
+        return (
+          <Reveal key={id}>
+            <section
+              id={id}
+              className="flex min-h-screen scroll-mt-14 items-center justify-center px-6 py-24 snap-start md:scroll-mt-0"
+            >
+              <div className="mx-auto w-full max-w-2xl">
+                <p className="text-ink/40 mb-8 text-center font-mono text-sm">
+                  {String(index + 2).padStart(2, "0")} — {label}
+                </p>
+                <Content />
+              </div>
+            </section>
+          </Reveal>
+        );
+      })}
     </>
   );
 }

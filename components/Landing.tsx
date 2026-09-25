@@ -65,7 +65,7 @@ export default function Landing() {
         className="motion-fallback font-mono text-ink/60 text-sm"
         {...lineMotion(PLACEHOLDER_START, { y: SLIDE_DISTANCE })}
       >
-        placeholder
+        Leeds, UK
       </motion.p>
     </section>
   );
