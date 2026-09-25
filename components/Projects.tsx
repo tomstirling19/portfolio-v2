@@ -15,7 +15,11 @@ export default function Projects() {
         className="scrollbar-none flex snap-x snap-mandatory overflow-x-auto rounded-md"
       >
         {PROJECTS.map(({ name, description, year, href, image }, index) => (
-          <div key={name} data-index={index} className="w-full shrink-0 snap-start px-1">
+          <div
+            key={name}
+            data-index={index}
+            className="w-full shrink-0 snap-start px-1 [scroll-snap-stop:always]"
+          >
             <div className="bg-raised relative aspect-[16/10] overflow-hidden rounded-md">
               <Image
                 src={image}
