@@ -4,7 +4,7 @@ export const EXPERIENCE = [
   {
     role: "Backend Engineer",
     org: "Zopa Bank",
-    period: "Oct 2025 — Present",
+    period: "Oct 2025 — Now",
     logo: "/images/logos/zopa-bank.png",
     logoWidth: 800,
     logoHeight: 141,

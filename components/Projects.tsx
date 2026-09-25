@@ -3,9 +3,10 @@
 import { CarouselNav } from "@/components/CarouselControls";
 import { ExternalLinkIcon } from "@/components/icons/BrandIcons";
 import { PROJECTS } from "@/content/data";
+import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import { useRef, useState, type PointerEvent } from "react";
+import { useRef, type PointerEvent } from "react";
 
 const OFFSET_X = 170;
 const SWIPE_THRESHOLD = 60;
@@ -23,11 +24,9 @@ function cardStyle(diff: number) {
 
 export default function Projects() {
   const reducedMotion = useReducedMotion();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const { activeIndex, goTo } = useProjectsCarousel();
   const dragStartX = useRef<number | null>(null);
   const active = PROJECTS[activeIndex];
-
-  const goTo = (index: number) => setActiveIndex(Math.max(0, Math.min(PROJECTS.length - 1, index)));
 
   const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
     dragStartX.current = event.clientX;

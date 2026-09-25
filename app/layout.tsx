@@ -3,7 +3,9 @@ import { Fraunces, JetBrains_Mono } from "next/font/google";
 import CursorGlow from "@/components/CursorGlow";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
+import ScrollController from "@/components/ScrollController";
 import ScrollProgress from "@/components/ScrollProgress";
+import { ProjectsCarouselProvider } from "@/context/ProjectsCarouselContext";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -58,12 +60,15 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <ScrollProgress />
-        <Nav />
-        <main id="main-content" className="flex flex-1 flex-col">
-          <CursorGlow>{children}</CursorGlow>
-        </main>
-        <Footer />
+        <ProjectsCarouselProvider>
+          <ScrollController />
+          <ScrollProgress />
+          <Nav />
+          <main id="main-content" className="flex flex-1 flex-col">
+            <CursorGlow>{children}</CursorGlow>
+          </main>
+          <Footer />
+        </ProjectsCarouselProvider>
       </body>
     </html>
   );

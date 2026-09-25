@@ -19,7 +19,7 @@
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.25s;
+  animation-duration: 0.18s;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,8 +1,9 @@
 "use client";
 
 import { SECTIONS } from "@/content/sections";
+import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
 import { jumpToSection } from "@/lib/jumpToSection";
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 
 function NavLink({
   id,
@@ -65,6 +66,12 @@ const ALL_IDS = ["landing", ...SECTIONS.map((section) => section.id)];
 export default function Nav() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { activeIndex, count, goTo } = useProjectsCarousel();
+  const activeIndexRef = useRef(activeIndex);
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -112,8 +119,25 @@ export default function Nav() {
       if (target && /^(input|textarea|select)$/i.test(target.tagName)) return;
 
       const currentIndex = getCurrentIndex();
-      const nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
-      const nextId = ALL_IDS[nextIndex];
+      const currentId = ALL_IDS[currentIndex];
+      const goingDown = event.key === "ArrowDown";
+
+      if (currentId === "projects") {
+        const atEnd = activeIndexRef.current >= count - 1;
+        const atStart = activeIndexRef.current <= 0;
+        if (goingDown && !atEnd) {
+          event.preventDefault();
+          goTo(activeIndexRef.current + 1);
+          return;
+        }
+        if (!goingDown && !atStart) {
+          event.preventDefault();
+          goTo(activeIndexRef.current - 1);
+          return;
+        }
+      }
+
+      const nextId = ALL_IDS[goingDown ? currentIndex + 1 : currentIndex - 1];
       if (!nextId) return;
 
       event.preventDefault();
@@ -122,7 +146,7 @@ export default function Nav() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [count, goTo]);
 
   return (
     <>

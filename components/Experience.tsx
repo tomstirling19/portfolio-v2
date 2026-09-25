@@ -19,7 +19,7 @@ function TimelineEntry({
     target: ref,
     offset: ["center end", "center start"],
   });
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.12, 1]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.92, 1.12, 0.92]);
 
   return (
     <motion.li
@@ -53,8 +53,7 @@ export default function Experience() {
   return (
     <div className="relative w-full">
       <div className="bg-ink/15 absolute top-2 bottom-2 left-0 w-px" />
-      <p className="text-ink/30 mb-6 pl-6 font-mono text-xs sm:pl-8">Now</p>
-      <ol className="flex flex-col gap-12 sm:gap-14 md:gap-16">
+      <ol className="mt-6 flex flex-col gap-12 sm:gap-14 md:gap-16">
         {EXPERIENCE.map((entry) => (
           <TimelineEntry key={entry.org} {...entry} />
         ))}
