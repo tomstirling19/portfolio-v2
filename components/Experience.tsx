@@ -12,7 +12,8 @@ function TimelineEntry({
   logo,
   logoWidth,
   logoHeight,
-}: (typeof EXPERIENCE)[number]) {
+  first,
+}: (typeof EXPERIENCE)[number] & { first?: boolean }) {
   const ref = useRef<HTMLLIElement>(null);
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
@@ -24,6 +25,7 @@ function TimelineEntry({
   return (
     <motion.li
       ref={ref}
+      id={first ? "experience-first" : undefined}
       style={reducedMotion ? undefined : { scale }}
       className="relative flex origin-left items-center gap-4 pl-6 sm:gap-6 sm:pl-8 md:gap-8"
     >
@@ -54,8 +56,8 @@ export default function Experience() {
     <div className="relative w-full">
       <div className="bg-ink/15 absolute top-2 bottom-2 left-0 w-px" />
       <ol className="mt-6 flex flex-col gap-12 sm:gap-14 md:gap-16">
-        {EXPERIENCE.map((entry) => (
-          <TimelineEntry key={entry.org} {...entry} />
+        {EXPERIENCE.map((entry, index) => (
+          <TimelineEntry key={entry.org} {...entry} first={index === 0} />
         ))}
       </ol>
     </div>

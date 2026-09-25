@@ -2,6 +2,7 @@
 
 import { SECTIONS } from "@/content/sections";
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
+import { ALL_SECTION_IDS as ALL_IDS, getCurrentSectionIndex as getCurrentIndex } from "@/lib/getCurrentSectionIndex";
 import { jumpToSection } from "@/lib/jumpToSection";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 
@@ -61,8 +62,6 @@ function NavLinks({
   );
 }
 
-const ALL_IDS = ["landing", ...SECTIONS.map((section) => section.id)];
-
 export default function Nav() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -97,21 +96,6 @@ export default function Nav() {
   // Reads position straight from the DOM rather than React state, so rapid
   // keypresses in a row each see where the page actually is right now.
   useEffect(() => {
-    const getCurrentIndex = () => {
-      let closestIndex = 0;
-      let closestDistance = Infinity;
-      ALL_IDS.forEach((id, index) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        const distance = Math.abs(el.getBoundingClientRect().top);
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
-        }
-      });
-      return closestIndex;
-    };
-
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
       if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;

@@ -1,29 +1,20 @@
 "use client";
 
-import { SECTIONS } from "@/content/sections";
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
+import { ALL_SECTION_IDS as ALL_IDS, getCurrentSectionIndex as getCurrentIndex } from "@/lib/getCurrentSectionIndex";
 import { jumpToSection } from "@/lib/jumpToSection";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 
-const ALL_IDS = ["landing", ...SECTIONS.map((section) => section.id)];
-const COOLDOWN_MS = 550;
-const WHEEL_THRESHOLD = 12;
-
-function getCurrentIndex() {
-  let closestIndex = 0;
-  let closestDistance = Infinity;
-  ALL_IDS.forEach((id, index) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const distance = Math.abs(el.getBoundingClientRect().top);
-    if (distance < closestDistance) {
-      closestDistance = distance;
-      closestIndex = index;
-    }
-  });
-  return closestIndex;
-}
+// Jump distance (e.g. from wherever the user stopped inside free-scrolling
+// experience) varies too much for a fixed timer — a short one unlocks mid-
+// glide and a new wheel tick interrupts the scroll, leaving it half-settled.
+// scrollend fires when the animation actually finishes; this is just the
+// safety net if a browser doesn't support that event.
+const COOLDOWN_FALLBACK_MS = 1200;
+// A single mouse-wheel "click" or light trackpad touch easily sends 12-40px
+// deltas; too low a threshold made any incidental nudge trigger a full jump.
+const WHEEL_THRESHOLD = 40;
 
 /**
  * Owns wheel-driven navigation between single-viewport sections and the
@@ -47,9 +38,12 @@ export default function ScrollController() {
 
     const lock = () => {
       lockedRef.current = true;
-      window.setTimeout(() => {
+      const unlock = () => {
         lockedRef.current = false;
-      }, COOLDOWN_MS);
+        window.removeEventListener("scrollend", unlock);
+      };
+      window.addEventListener("scrollend", unlock, { once: true });
+      window.setTimeout(unlock, COOLDOWN_FALLBACK_MS);
     };
 
     const handleWheel = (event: WheelEvent) => {
