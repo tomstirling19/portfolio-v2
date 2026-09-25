@@ -1,96 +1,108 @@
 "use client";
 
 import { CarouselNav } from "@/components/CarouselControls";
+import { ExternalLinkIcon } from "@/components/icons/BrandIcons";
 import { PROJECTS } from "@/content/data";
-import { useCarouselIndex } from "@/hooks/useCarouselIndex";
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import type { MouseEvent } from "react";
-import { useRef } from "react";
+import { useRef, useState, type PointerEvent } from "react";
 
-const TILT_DEGREES = 6;
-const SPRING_STIFFNESS = 300;
-const SPRING_DAMPING = 30;
+const OFFSET_X = 170;
+const SWIPE_THRESHOLD = 60;
 
-function ProjectImage({ src, alt }: { src: string; alt: string }) {
-  const reducedMotion = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
-  const springRotateX = useSpring(rotateX, {
-    stiffness: SPRING_STIFFNESS,
-    damping: SPRING_DAMPING,
-  });
-  const springRotateY = useSpring(rotateY, {
-    stiffness: SPRING_STIFFNESS,
-    damping: SPRING_DAMPING,
-  });
-
-  const handleMouseMove = (event: MouseEvent<HTMLDivElement>) => {
-    if (reducedMotion || !ref.current) return;
-    const bounds = ref.current.getBoundingClientRect();
-    const px = (event.clientX - bounds.left) / bounds.width - 0.5;
-    const py = (event.clientY - bounds.top) / bounds.height - 0.5;
-    rotateY.set(px * TILT_DEGREES);
-    rotateX.set(py * -TILT_DEGREES);
-  };
-
-  const handleMouseLeave = () => {
-    rotateX.set(0);
-    rotateY.set(0);
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        rotateX: springRotateX,
-        rotateY: springRotateY,
-        transformPerspective: 800,
-      }}
-      className="bg-raised relative aspect-[16/10] overflow-hidden rounded-md"
-    >
-      <Image src={src} alt={alt} fill unoptimized className="object-cover" />
-    </motion.div>
-  );
+function cardStyle(diff: number) {
+  const abs = Math.abs(diff);
+  if (abs === 0) {
+    return { x: 0, scale: 1, opacity: 1, blur: 0, zIndex: 30 };
+  }
+  if (abs === 1) {
+    return { x: diff * OFFSET_X, scale: 0.82, opacity: 0.5, blur: 1.5, zIndex: 20 };
+  }
+  return { x: diff * OFFSET_X * 1.6, scale: 0.65, opacity: 0, blur: 3, zIndex: 10 };
 }
 
 export default function Projects() {
-  const { trackRef, activeIndex, scrollToIndex } = useCarouselIndex(PROJECTS.length);
+  const reducedMotion = useReducedMotion();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const dragStartX = useRef<number | null>(null);
+  const active = PROJECTS[activeIndex];
+
+  const goTo = (index: number) => setActiveIndex(Math.max(0, Math.min(PROJECTS.length - 1, index)));
+
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    dragStartX.current = event.clientX;
+  };
+
+  const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    if (dragStartX.current === null) return;
+    const delta = event.clientX - dragStartX.current;
+    dragStartX.current = null;
+    if (delta < -SWIPE_THRESHOLD) goTo(activeIndex + 1);
+    else if (delta > SWIPE_THRESHOLD) goTo(activeIndex - 1);
+  };
 
   return (
     <div className="flex flex-col gap-6">
       <div
-        ref={trackRef}
-        className="scrollbar-none flex snap-x snap-mandatory overflow-x-auto rounded-md"
+        className="relative aspect-[16/10] touch-pan-y overflow-hidden"
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={() => {
+          dragStartX.current = null;
+        }}
       >
-        {PROJECTS.map(({ name, description, year, href, image }, index) => (
-          <div
-            key={name}
-            data-index={index}
-            className="w-full shrink-0 snap-start px-1 [scroll-snap-stop:always]"
-          >
-            <ProjectImage src={image} alt={name} />
-            <div className="mt-4">
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-baseline justify-between gap-4"
-              >
-                <span className="text-ink group-hover:text-warm-accent transition-colors">
-                  {name}
-                </span>
-                <span className="text-ink/40 font-mono text-xs whitespace-nowrap">{year}</span>
-              </a>
-              <p className="text-ink/60 mt-2">{description}</p>
+        {PROJECTS.map(({ name, image }, index) => {
+          const diff = reducedMotion ? (index === activeIndex ? 0 : 2) : index - activeIndex;
+          const style = cardStyle(diff);
+          return (
+            <div
+              key={name}
+              className="bg-raised absolute inset-0 m-auto h-full w-[78%] cursor-pointer overflow-hidden rounded-md transition-[transform,opacity,filter] duration-500 ease-out"
+              style={{
+                zIndex: style.zIndex,
+                transform: `translateX(${style.x}px) scale(${style.scale})`,
+                opacity: style.opacity,
+                filter: `blur(${style.blur}px)`,
+              }}
+              onClick={() => index !== activeIndex && goTo(index)}
+            >
+              <Image
+                src={image}
+                alt={name}
+                fill
+                unoptimized
+                className="pointer-events-none object-cover"
+              />
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
-      <CarouselNav count={PROJECTS.length} activeIndex={activeIndex} onNavigate={scrollToIndex} />
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={active.name}
+          initial={reducedMotion ? undefined : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reducedMotion ? undefined : { opacity: 0, y: -8 }}
+          transition={{ duration: 0.25 }}
+        >
+          <a
+            href={active.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-baseline justify-between gap-4"
+          >
+            <span className="text-warm-accent hover:text-icon-orange inline-flex items-center gap-1.5 transition-colors">
+              {active.name}
+              <ExternalLinkIcon className="h-3.5 w-3.5 shrink-0" />
+            </span>
+            <span className="text-ink/40 font-mono text-xs whitespace-nowrap">{active.year}</span>
+          </a>
+          <p className="text-ink mt-2">{active.description}</p>
+        </motion.div>
+      </AnimatePresence>
+
+      <CarouselNav count={PROJECTS.length} activeIndex={activeIndex} onNavigate={goTo} />
     </div>
   );
 }

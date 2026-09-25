@@ -64,6 +64,7 @@ const ALL_IDS = ["landing", ...SECTIONS.map((section) => section.id)];
 
 export default function Nav() {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -123,10 +124,6 @@ export default function Nav() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const closeMobileMenu = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.currentTarget.closest("details")?.removeAttribute("open");
-  };
-
   return (
     <>
       <nav
@@ -136,17 +133,25 @@ export default function Nav() {
         <NavLinks activeId={activeId} />
       </nav>
 
-      <details className="bg-ground/90 sticky top-0 z-10 backdrop-blur md:hidden">
-        <summary className="font-mono text-ink cursor-pointer list-none px-4 py-3 text-sm">
-          Menu
-        </summary>
-        <nav
-          aria-label="Section navigation"
-          className="flex flex-col gap-4 px-4 pb-4"
+      <div className="bg-ground/90 sticky top-0 z-10 backdrop-blur md:hidden">
+        <button
+          type="button"
+          onClick={() => setMobileOpen((open) => !open)}
+          aria-expanded={mobileOpen}
+          className="text-ink block w-full cursor-pointer px-4 py-3 text-left font-mono text-sm"
         >
-          <NavLinks activeId={activeId} onNavigate={closeMobileMenu} />
-        </nav>
-      </details>
+          Menu
+        </button>
+        <div
+          className={`grid px-4 transition-[grid-template-rows] duration-300 ease-out ${
+            mobileOpen ? "grid-rows-[1fr] pb-4" : "grid-rows-[0fr]"
+          }`}
+        >
+          <nav aria-label="Section navigation" className="flex flex-col gap-4 overflow-hidden">
+            <NavLinks activeId={activeId} onNavigate={() => setMobileOpen(false)} />
+          </nav>
+        </div>
+      </div>
     </>
   );
 }

@@ -18,15 +18,17 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://tmstrlng.com"),
   title: "Thomas Stirling — Software Engineer",
   description:
     "Portfolio of Thomas Stirling, a software engineer working on backend systems, ML tooling, and full-stack applications.",
+  icons: { icon: "/favicon.png" },
   openGraph: {
     title: "Thomas Stirling — Software Engineer",
     description:
       "Portfolio of Thomas Stirling, a software engineer working on backend systems, ML tooling, and full-stack applications.",
     type: "website",
-    images: ["/images/thomas.jpg"],
+    images: ["/og-image.png"],
   },
 };
 
