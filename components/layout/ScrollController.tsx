@@ -2,11 +2,7 @@
 
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
 import { useLatestRef } from "@/hooks/useLatestRef";
-import {
-  ALL_SECTION_IDS,
-  getCurrentSectionIndex,
-  isFreeScrollSection,
-} from "@/lib/getCurrentSectionIndex";
+import { getCurrentSectionId, isFreeScrollSection } from "@/lib/getCurrentSectionIndex";
 import { navigateOneStep } from "@/lib/navigateSection";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
@@ -23,7 +19,7 @@ export default function ScrollController() {
     if (reducedMotion) return;
 
     const handleWheel = (event: WheelEvent) => {
-      const currentId = ALL_SECTION_IDS[getCurrentSectionIndex()];
+      const currentId = getCurrentSectionId();
 
       if (isFreeScrollSection(currentId)) return;
 

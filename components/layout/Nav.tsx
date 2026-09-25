@@ -3,7 +3,7 @@
 import { SECTIONS } from "@/content/sections";
 import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
 import { useLatestRef } from "@/hooks/useLatestRef";
-import { ALL_SECTION_IDS, getCurrentSectionIndex } from "@/lib/getCurrentSectionIndex";
+import { getCurrentSectionId } from "@/lib/getCurrentSectionIndex";
 import { jumpToSection } from "@/lib/jumpToSection";
 import { navigateOneStep } from "@/lib/navigateSection";
 import { useEffect, useState, type MouseEvent } from "react";
@@ -72,7 +72,7 @@ export default function Nav() {
 
   useEffect(() => {
     const updateActiveId = () => {
-      setActiveId(ALL_SECTION_IDS[getCurrentSectionIndex()]);
+      setActiveId(getCurrentSectionId());
     };
 
     updateActiveId();

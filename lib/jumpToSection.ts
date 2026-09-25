@@ -34,6 +34,10 @@ function glideScrollTo(targetTop: number, duration: number) {
   });
 }
 
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function targetTopFor(id: string) {
   const anchorId = SECTIONS.find((section) => section.id === id)?.enterAnchorId;
   const anchorEl = anchorId ? document.getElementById(anchorId) : null;
@@ -47,10 +51,9 @@ function targetTopFor(id: string) {
 }
 
 export function smoothScrollBy(delta: number): Promise<void> {
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const targetTop = window.scrollY + delta;
 
-  if (reducedMotion) {
+  if (prefersReducedMotion()) {
     window.scrollTo({ top: targetTop, behavior: "instant" });
     return Promise.resolve();
   }
@@ -60,12 +63,10 @@ export function smoothScrollBy(delta: number): Promise<void> {
 
 export function jumpToSection(id: string): Promise<void> {
   const targetTop = targetTopFor(id);
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
   let done: Promise<void> = Promise.resolve();
 
   if (targetTop !== null) {
-    if (reducedMotion) {
+    if (prefersReducedMotion()) {
       window.scrollTo({ top: targetTop, behavior: "instant" });
     } else {
       const html = document.documentElement;

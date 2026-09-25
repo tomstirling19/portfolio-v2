@@ -91,7 +91,7 @@ export default function Projects() {
             rel="noopener noreferrer"
             className="group flex items-baseline justify-between gap-4"
           >
-            <span className="text-warm-accent hover:text-icon-orange inline-flex items-center gap-1.5 transition-colors">
+            <span className="text-warm-accent hover:text-icon-orange inline-flex origin-left scale-100 items-center gap-1.5 underline decoration-transparent underline-offset-4 transition-all hover:scale-110 hover:decoration-current">
               {active.name}
               <ExternalLinkIcon className="h-3.5 w-3.5 shrink-0" />
             </span>

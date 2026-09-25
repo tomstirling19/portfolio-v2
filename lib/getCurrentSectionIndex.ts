@@ -19,3 +19,7 @@ export function getCurrentSectionIndex() {
   });
   return currentIndex;
 }
+
+export function getCurrentSectionId() {
+  return ALL_SECTION_IDS[getCurrentSectionIndex()];
+}

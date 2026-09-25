@@ -33,8 +33,8 @@ function AboutText({ revealed }: { revealed: boolean }) {
       <p>
         I&rsquo;ve had the chance to build software across defence, security,
         healthcare, gambling &amp; entertainment, and fintech. My greatest
-        interests lie in AI, but I also like working on high-throughput and
-        efficient large distributed systems.
+        interests lie in AI, but I also like working on scalable,
+        high-throughput and efficient distributed systems.
       </p>
       <MarginNote>
         Outside of engineering, I enjoy hiking (mainly in bad weather),
@@ -42,7 +42,7 @@ function AboutText({ revealed }: { revealed: boolean }) {
       </MarginNote>
       <p>
         Right now I&rsquo;m mostly researching how LLMs and agents are
-        advancing, and taking an interest in graph engineering with agents.
+        advancing and taking an interest in graph engineering with agents.
         I have a personal project called Bamboo that I&rsquo;m looking to
         experiment on.
       </p>
@@ -78,13 +78,20 @@ export default function About() {
       className="scroll-mt-14 snap-start md:scroll-mt-0 [scroll-snap-stop:always]"
     >
       <div className="flex min-h-screen flex-col justify-center gap-8 px-6 py-24 md:hidden">
-        <PhotoCarousel photos={ABOUT_PHOTOS} />
+        <PhotoCarousel photos={ABOUT_PHOTOS} imagePosition="center 85%" />
         <AboutText revealed={revealed} />
       </div>
 
       <div className="relative hidden h-screen overflow-hidden md:block">
         <div className="absolute inset-0" style={{ clipPath: DIAGONAL_CLIP_PHOTO }}>
-          <PhotoCarousel photos={ABOUT_PHOTOS} fill navPosition="overlay" />
+          <div className="h-full w-[46%]">
+            <PhotoCarousel
+              photos={ABOUT_PHOTOS}
+              fill
+              navPosition="overlay"
+              imagePosition="center 15%"
+            />
+          </div>
         </div>
         <div className="bg-ground absolute inset-0" style={{ clipPath: DIAGONAL_CLIP_TEXT }}>
           <div className="flex h-full flex-col justify-center gap-5 py-24 pr-[max(14rem,14%)] pl-[42%]">

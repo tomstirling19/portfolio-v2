@@ -45,7 +45,7 @@ function TimelineEntry({
         />
       </div>
       <div>
-        <p className="text-ink text-lg font-semibold sm:text-xl md:text-2xl">{role}</p>
+        <p className="text-ink text-base font-semibold sm:text-lg md:text-xl">{role}</p>
         <p className="text-warm-accent font-mono text-sm sm:text-base">{org}</p>
       </div>
     </motion.li>
