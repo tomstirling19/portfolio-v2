@@ -69,7 +69,7 @@ export default function Landing() {
         style={reducedMotion ? undefined : { scale: exitScale, opacity: exitOpacity }}
         className="flex flex-col items-center gap-4"
       >
-        <h1 className="text-warm-accent flex items-baseline text-4xl sm:text-5xl md:text-6xl">
+        <h1 className="text-warm-accent flex items-baseline text-4xl sm:text-5xl lg:text-6xl">
           <span className="typewriter-text">{NAME}</span>
           <span className="typewriter-cursor" aria-hidden="true" />
         </h1>
