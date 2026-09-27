@@ -1,10 +1,5 @@
 # Portfolio v2
 
-Thomas Stirling's portfolio. Next.js static export, deployed to GitHub Pages via GitHub Actions on push to `main`.
+My personal portfolio site, at [tmstrlng.com](https://tmstrlng.com).
 
-```bash
-npm run dev      # local dev server
-npm run build    # static export to ./out
-npm run lint
-npm run format
-```
+Next.js, TypeScript, Tailwind CSS, Motion, Matter.js.
