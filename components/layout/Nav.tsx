@@ -99,18 +99,18 @@ export default function Nav() {
         <NavLinks activeId={activeId} />
       </nav>
 
-      <div className="bg-ground/90 sticky top-0 z-10 backdrop-blur md:hidden">
+      <div className="sticky top-0 z-10 md:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen((open) => !open)}
           aria-expanded={mobileOpen}
-          className="text-ink block w-full cursor-pointer px-4 py-3 text-left font-mono text-sm"
+          className="text-ink bg-ground/90 block w-full cursor-pointer px-4 py-3 text-left font-mono text-sm backdrop-blur"
         >
           Menu
         </button>
         <div
           inert={!mobileOpen}
-          className={`grid px-4 transition-[grid-template-rows] duration-300 ease-out ${
+          className={`bg-ground/90 absolute inset-x-0 top-full grid px-4 backdrop-blur transition-[grid-template-rows] duration-300 ease-out ${
             mobileOpen ? "grid-rows-[1fr] pb-4" : "grid-rows-[0fr]"
           }`}
         >
