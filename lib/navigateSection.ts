@@ -6,6 +6,11 @@ import {
 import { jumpToSection, smoothScrollBy } from "@/lib/jumpToSection";
 
 const FREE_SCROLL_STEP_PX = 480;
+const CAROUSEL_TRANSITION_MS = 700;
+
+function wait(ms: number) {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms));
+}
 
 type CarouselState = {
   activeIndex: number;
@@ -20,7 +25,20 @@ export function navigateOneStep(goingDown: boolean, carousel: CarouselState): Na
   const currentId = ALL_SECTION_IDS[currentIndex];
 
   if (isFreeScrollSection(currentId)) {
-    const step = goingDown ? FREE_SCROLL_STEP_PX : -FREE_SCROLL_STEP_PX;
+    if (goingDown) {
+      return { navigated: true, done: smoothScrollBy(FREE_SCROLL_STEP_PX) };
+    }
+
+    const el = document.getElementById(currentId);
+    const sectionTop = el ? window.scrollY + el.getBoundingClientRect().top : 0;
+    const atTop = window.scrollY <= sectionTop + 1;
+    const prevId = ALL_SECTION_IDS[currentIndex - 1];
+
+    if (atTop && prevId) {
+      return { navigated: true, done: jumpToSection(prevId) };
+    }
+
+    const step = Math.max(-FREE_SCROLL_STEP_PX, sectionTop - window.scrollY);
     return { navigated: true, done: smoothScrollBy(step) };
   }
 
@@ -29,11 +47,11 @@ export function navigateOneStep(goingDown: boolean, carousel: CarouselState): Na
     const atStart = carousel.activeIndex <= 0;
     if (goingDown && !atEnd) {
       carousel.goTo(carousel.activeIndex + 1);
-      return { navigated: true };
+      return { navigated: true, done: wait(CAROUSEL_TRANSITION_MS) };
     }
     if (!goingDown && !atStart) {
       carousel.goTo(carousel.activeIndex - 1);
-      return { navigated: true };
+      return { navigated: true, done: wait(CAROUSEL_TRANSITION_MS) };
     }
   }
 

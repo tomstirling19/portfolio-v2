@@ -1,84 +1,53 @@
 import { SECTIONS } from "@/content/sections";
 
-const GLIDE_DURATION_MS = 450;
-
-function easeInOutCubic(t: number) {
-  return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
-}
-
-function glideScrollTo(targetTop: number, duration: number) {
-  return new Promise<void>((resolve) => {
-    const startTop = window.scrollY;
-    const delta = targetTop - startTop;
-    const startTime = performance.now();
-    let settled = false;
-
-    const finish = () => {
-      if (settled) return;
-      settled = true;
-      resolve();
-    };
-
-    function step(now: number) {
-      const progress = Math.min((now - startTime) / duration, 1);
-      window.scrollTo(0, startTop + delta * easeInOutCubic(progress));
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      } else {
-        finish();
-      }
-    }
-
-    requestAnimationFrame(step);
-    window.setTimeout(finish, duration + 300);
-  });
-}
-
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function targetTopFor(id: string) {
-  const anchorId = SECTIONS.find((section) => section.id === id)?.enterAnchorId;
-  const anchorEl = anchorId ? document.getElementById(anchorId) : null;
-  const target = anchorEl ?? document.getElementById(id);
-  if (!target) return null;
+function waitForScrollEnd(): Promise<void> {
+  return new Promise((resolve) => {
+    const finish = () => {
+      window.removeEventListener("scrollend", finish);
+      resolve();
+    };
+    window.addEventListener("scrollend", finish, { once: true });
+    window.setTimeout(finish, 1000);
+  });
+}
 
-  const rect = target.getBoundingClientRect();
-  return anchorEl
-    ? window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2
-    : window.scrollY + rect.top;
+let snapDisableCount = 0;
+let snapTypeBeforeDisable = "";
+
+function disableSnap() {
+  if (snapDisableCount === 0) {
+    snapTypeBeforeDisable = document.documentElement.style.scrollSnapType;
+    document.documentElement.style.scrollSnapType = "none";
+    void document.documentElement.offsetHeight;
+  }
+  snapDisableCount++;
+}
+
+function restoreSnap() {
+  snapDisableCount = Math.max(0, snapDisableCount - 1);
+  if (snapDisableCount === 0) {
+    document.documentElement.style.scrollSnapType = snapTypeBeforeDisable;
+  }
 }
 
 export function smoothScrollBy(delta: number): Promise<void> {
-  const targetTop = window.scrollY + delta;
-
   if (prefersReducedMotion()) {
-    window.scrollTo({ top: targetTop, behavior: "instant" });
+    window.scrollBy({ top: delta, behavior: "instant" });
     return Promise.resolve();
   }
 
-  return glideScrollTo(targetTop, GLIDE_DURATION_MS);
+  window.scrollBy({ top: delta, behavior: "smooth" });
+  return waitForScrollEnd();
 }
 
 export function jumpToSection(id: string): Promise<void> {
-  const targetTop = targetTopFor(id);
-  let done: Promise<void> = Promise.resolve();
-
-  if (targetTop !== null) {
-    if (prefersReducedMotion()) {
-      window.scrollTo({ top: targetTop, behavior: "instant" });
-    } else {
-      const html = document.documentElement;
-      const previousSnapType = html.style.scrollSnapType;
-      html.style.scrollSnapType = "none";
-      void html.offsetHeight;
-
-      done = glideScrollTo(targetTop, GLIDE_DURATION_MS).then(() => {
-        html.style.scrollSnapType = previousSnapType;
-      });
-    }
-  }
+  const anchorId = SECTIONS.find((section) => section.id === id)?.enterAnchorId;
+  const anchorEl = anchorId ? document.getElementById(anchorId) : null;
+  const target = anchorEl ?? document.getElementById(id);
 
   history.replaceState(
     null,
@@ -86,5 +55,16 @@ export function jumpToSection(id: string): Promise<void> {
     id === "landing" ? location.pathname + location.search : `#${id}`,
   );
 
-  return done;
+  if (!target) return Promise.resolve();
+
+  const block = anchorEl ? "center" : "start";
+
+  if (prefersReducedMotion()) {
+    target.scrollIntoView({ behavior: "instant", block });
+    return Promise.resolve();
+  }
+
+  disableSnap();
+  target.scrollIntoView({ behavior: "smooth", block });
+  return waitForScrollEnd().then(restoreSnap);
 }

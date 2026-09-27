@@ -52,7 +52,7 @@ export default function Landing() {
     <section
       id="landing"
       ref={sectionRef}
-      className="flex min-h-screen scroll-mt-14 flex-col items-center justify-center gap-4 px-6 snap-start md:scroll-mt-0 [scroll-snap-stop:always]"
+      className="flex min-h-dvh scroll-mt-14 flex-col items-center justify-center gap-4 px-6 snap-start md:scroll-mt-0 [scroll-snap-stop:always]"
       style={
         {
           "--typewriter-width": `${NAME.length}ch`,

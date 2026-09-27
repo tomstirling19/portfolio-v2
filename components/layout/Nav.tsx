@@ -1,12 +1,14 @@
 "use client";
 
 import { SECTIONS } from "@/content/sections";
-import { useProjectsCarousel } from "@/context/ProjectsCarouselContext";
-import { useLatestRef } from "@/hooks/useLatestRef";
-import { getCurrentSectionId } from "@/lib/getCurrentSectionIndex";
+import { useNavigateOneStep } from "@/hooks/useNavigateOneStep";
+import {
+  ALL_SECTION_IDS,
+  getCurrentSectionIndex,
+  subscribeToCurrentSection,
+} from "@/lib/getCurrentSectionIndex";
 import { jumpToSection } from "@/lib/jumpToSection";
-import { navigateOneStep } from "@/lib/navigateSection";
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useState, useSyncExternalStore, type MouseEvent } from "react";
 
 function NavLink({
   id,
@@ -33,7 +35,7 @@ function NavLink({
       aria-current={active ? "location" : undefined}
       onClick={handleClick}
       className={`block py-1.5 font-mono text-sm transition-colors md:py-0 ${
-        active ? "text-cool-accent" : "text-ink/60 hover:text-ink"
+        active ? "text-cool-accent" : "text-ink/65 hover:text-ink"
       }`}
     >
       {String(index + 1).padStart(2, "0")} {label}
@@ -65,20 +67,14 @@ function NavLinks({
 }
 
 export default function Nav() {
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const currentSectionIndex = useSyncExternalStore(
+    subscribeToCurrentSection,
+    getCurrentSectionIndex,
+    () => 0,
+  );
+  const activeId = ALL_SECTION_IDS[currentSectionIndex];
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { activeIndex, count, goTo } = useProjectsCarousel();
-  const activeIndexRef = useLatestRef(activeIndex);
-
-  useEffect(() => {
-    const updateActiveId = () => {
-      setActiveId(getCurrentSectionId());
-    };
-
-    updateActiveId();
-    window.addEventListener("scroll", updateActiveId, { passive: true });
-    return () => window.removeEventListener("scroll", updateActiveId);
-  }, []);
+  const navigate = useNavigateOneStep();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -87,17 +83,12 @@ export default function Nav() {
       const target = event.target as HTMLElement | null;
       if (target && /^(input|textarea|select)$/i.test(target.tagName)) return;
 
-      const { navigated } = navigateOneStep(event.key === "ArrowDown", {
-        activeIndex: activeIndexRef.current,
-        count,
-        goTo,
-      });
-      if (navigated) event.preventDefault();
+      if (navigate(event.key === "ArrowDown")) event.preventDefault();
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [count, goTo, activeIndexRef]);
+  }, [navigate]);
 
   return (
     <>

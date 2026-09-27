@@ -77,12 +77,12 @@ export default function About() {
       id="about"
       className="scroll-mt-14 snap-start md:scroll-mt-0 [scroll-snap-stop:always]"
     >
-      <div className="flex min-h-screen flex-col justify-center gap-8 px-6 py-24 md:hidden">
+      <div className="flex min-h-dvh flex-col justify-center gap-8 px-6 py-24 md:hidden">
         <PhotoCarousel photos={ABOUT_PHOTOS} imagePosition="center 45%" />
         <AboutText revealed={revealed} />
       </div>
 
-      <div className="relative hidden h-screen overflow-hidden md:block">
+      <div className="relative hidden h-dvh overflow-hidden md:block">
         <div className="absolute inset-0" style={{ clipPath: DIAGONAL_CLIP_PHOTO }}>
           <div className="h-full w-[46%]">
             <PhotoCarousel
