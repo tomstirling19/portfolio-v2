@@ -41,9 +41,9 @@ export default function Projects() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <div
-        className="relative aspect-[16/10] touch-pan-y overflow-hidden"
+        className="relative aspect-[16/9] touch-pan-y overflow-hidden sm:aspect-[16/10]"
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerCancel={() => {
