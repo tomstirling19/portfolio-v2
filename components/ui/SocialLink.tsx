@@ -1,8 +1,8 @@
-import { LINK_COLORS, LINK_ICONS } from "@/components/icons/linkIcons";
+import { LINK_COLORS, LINK_ICONS, LINK_TEXT_COLORS } from "@/components/icons/linkIcons";
 import type { CSSProperties } from "react";
 
 const VARIANT_CLASSES = {
-  pill: "flex items-center gap-2 rounded-full border px-5 py-2.5 font-mono text-sm transition-colors border-[color:color-mix(in_srgb,var(--link-color)_30%,transparent)] text-[color:color-mix(in_srgb,var(--link-color)_85%,transparent)] hover:border-[color:var(--link-color)] hover:bg-[color:color-mix(in_srgb,var(--link-color)_10%,transparent)] hover:text-[color:var(--link-color)]",
+  pill: "flex items-center gap-2 rounded-full border px-5 py-2.5 font-mono text-sm transition-colors border-[color:color-mix(in_srgb,var(--link-color)_30%,transparent)] text-[color:var(--link-text-color)] hover:border-[color:var(--link-color)] hover:bg-[color:color-mix(in_srgb,var(--link-color)_10%,transparent)]",
   icon: "block text-[color:var(--link-color)] transition-all hover:-translate-y-1 hover:scale-110 hover:drop-shadow-[0_0_12px_var(--link-color)]",
 };
 
@@ -28,7 +28,12 @@ export function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={variant === "icon" ? label : undefined}
-      style={{ "--link-color": LINK_COLORS[label] } as CSSProperties}
+      style={
+        {
+          "--link-color": LINK_COLORS[label],
+          "--link-text-color": LINK_TEXT_COLORS[label],
+        } as CSSProperties
+      }
       className={VARIANT_CLASSES[variant]}
     >
       <Icon className={ICON_SIZE_CLASSES[variant]} />

@@ -7,6 +7,9 @@
   --color-cool-accent: #7c93c4;
   --color-warm-accent: #e3b873;
   --color-icon-orange: #f2a76b;
+  --color-link-linkedin: #2e91f4;
+  --color-link-gitlab: #fc702b;
+  --color-link-email: #ed6155;
 }
 
 @theme inline {
@@ -37,6 +40,9 @@
   --color-cool-accent: #3f5484;
   --color-warm-accent: #93692a;
   --color-icon-orange: #934f26;
+  --color-link-linkedin: #0857a5;
+  --color-link-gitlab: #9b3502;
+  --color-link-email: #b51f13;
   --cursor-color: var(--color-cool-accent);
 }
 

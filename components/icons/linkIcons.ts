@@ -15,6 +15,14 @@ export const LINK_COLORS: Record<keyof typeof LINK_ICONS, string> = {
   Email: "#ea4335",
 };
 
+// Contrast-safe shades of the brand colors above, for use as readable text (WCAG 4.5:1).
+export const LINK_TEXT_COLORS: Record<keyof typeof LINK_ICONS, string> = {
+  LinkedIn: "var(--color-link-linkedin)",
+  GitHub: "var(--color-ink)",
+  GitLab: "var(--color-link-gitlab)",
+  Email: "var(--color-link-email)",
+};
+
 export const ICON_LINKS = LINKS.filter(
   (link): link is (typeof LINKS)[number] & { label: keyof typeof LINK_ICONS } =>
     link.label in LINK_ICONS,
