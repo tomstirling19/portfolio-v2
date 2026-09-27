@@ -40,8 +40,9 @@ export function smoothScrollBy(delta: number): Promise<void> {
     return Promise.resolve();
   }
 
+  disableSnap();
   window.scrollBy({ top: delta, behavior: "smooth" });
-  return waitForScrollEnd();
+  return waitForScrollEnd().then(restoreSnap);
 }
 
 export function jumpToSection(id: string): Promise<void> {
