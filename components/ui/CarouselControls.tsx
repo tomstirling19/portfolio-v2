@@ -15,7 +15,7 @@ export function CarouselNav({
         type="button"
         aria-label="Previous"
         onClick={() => onNavigate(Math.max(activeIndex - 1, 0))}
-        className="text-ink/50 hover:text-ink flex h-11 w-11 items-center justify-center font-mono text-lg transition-colors"
+        className="text-ink/65 hover:text-ink flex h-11 w-11 items-center justify-center font-mono text-lg transition-colors"
       >
         ‹
       </button>
@@ -43,7 +43,7 @@ export function CarouselNav({
         type="button"
         aria-label="Next"
         onClick={() => onNavigate(Math.min(activeIndex + 1, count - 1))}
-        className="text-ink/50 hover:text-ink flex h-11 w-11 items-center justify-center font-mono text-lg transition-colors"
+        className="text-ink/65 hover:text-ink flex h-11 w-11 items-center justify-center font-mono text-lg transition-colors"
       >
         ›
       </button>
