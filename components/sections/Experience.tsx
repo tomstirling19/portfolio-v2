@@ -30,7 +30,7 @@ function TimelineEntry({
       style={reducedMotion ? undefined : { scale }}
       className="relative flex origin-left items-center gap-4 pl-6 sm:gap-6 sm:pl-8 md:gap-8"
     >
-      <span className="text-ink/65 absolute -top-5 left-0 -translate-x-1/2 font-mono text-[10px] whitespace-nowrap">
+      <span className="text-ink/65 absolute -top-5 left-0 font-mono text-[10px] whitespace-nowrap sm:-translate-x-1/2">
         {period}
       </span>
       <span className="bg-warm-accent absolute top-2 -left-[3px] h-2 w-2 rounded-full" />
