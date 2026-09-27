@@ -99,7 +99,7 @@ export default function Nav() {
         <NavLinks activeId={activeId} />
       </nav>
 
-      <div className="sticky top-0 z-10 md:hidden">
+      <div className="transform-gpu sticky top-0 z-10 md:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen((open) => !open)}
