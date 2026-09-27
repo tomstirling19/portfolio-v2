@@ -78,7 +78,7 @@ export default function About() {
       className="scroll-mt-14 snap-start md:scroll-mt-0 [scroll-snap-stop:always]"
     >
       <div className="flex min-h-screen flex-col justify-center gap-8 px-6 py-24 md:hidden">
-        <PhotoCarousel photos={ABOUT_PHOTOS} imagePosition="center 85%" />
+        <PhotoCarousel photos={ABOUT_PHOTOS} imagePosition="center 45%" />
         <AboutText revealed={revealed} />
       </div>
 
