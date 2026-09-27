@@ -95,7 +95,7 @@ export default function Projects() {
               {active.name}
               <ExternalLinkIcon className="h-3.5 w-3.5 shrink-0" />
             </span>
-            <span className="text-ink/40 font-mono text-xs whitespace-nowrap">{active.year}</span>
+            <span className="text-ink/65 font-mono text-xs whitespace-nowrap">{active.year}</span>
           </a>
           <p className="text-ink mt-2">{active.description}</p>
         </motion.div>
